@@ -1,5 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 
+function htmlToText(html: string) {
+  return html
+    .replace(/<script[\s\S]*?<\/script>/gi, "")
+    .replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
 
@@ -19,6 +30,7 @@ export async function GET(request: NextRequest) {
     });
 
     const html = await response.text();
+    const text = htmlToText(html);
 
     return NextResponse.json({
       ok: true,
@@ -27,7 +39,8 @@ export async function GET(request: NextRequest) {
       jcd,
       rno,
       htmlLength: html.length,
-      preview: html.slice(0, 500),
+      textLength: text.length,
+      textPreview: text.slice(0, 3000),
     });
   } catch (error) {
     return NextResponse.json(
