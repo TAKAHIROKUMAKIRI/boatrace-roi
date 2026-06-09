@@ -1,34 +1,42 @@
 [
-  { "race": "蒲郡 1R", "bet": "1-3", "probability": 0.18, "odds": 7.2, "result": "1-3" },
-  { "race": "蒲郡 2R", "bet": "2-1", "probability": 0.09, "odds": 12.4, "result": "1-2" },
-  { "race": "住之江 5R", "bet": "1-2", "probability": 0.31, "odds": 3.4, "result": "1-2" },
-  { "race": "桐生 8R", "bet": "3-1", "probability": 0.08, "odds": 18.5, "result": "3-1" },
-  { "race": "丸亀 11R", "bet": "1-4", "probability": 0.16, "odds": 8.1, "result": "1-5" },
-  { "race": "戸田 3R", "bet": "4-1", "probability": 0.06, "odds": 22.8, "result": "4-1" },
-  { "race": "江戸川 6R", "bet": "2-3", "probability": 0.11, "odds": 9.7, "result": "1-2" },
-  { "race": "多摩川 9R", "bet": "1-5", "probability": 0.14, "odds": 10.2, "result": "1-5" },
-  { "race": "浜名湖 4R", "bet": "5-1", "probability": 0.04, "odds": 36.5, "result": "2-1" },
-  { "race": "常滑 7R", "bet": "1-6", "probability": 0.07, "odds": 21.4, "result": "1-6" },
-
-  { "race": "津 2R", "bet": "2-4", "probability": 0.10, "odds": 11.1, "result": "2-4" },
-  { "race": "三国 10R", "bet": "1-3", "probability": 0.22, "odds": 5.6, "result": "1-2" },
-  { "race": "びわこ 12R", "bet": "1-2", "probability": 0.38, "odds": 2.8, "result": "1-2" },
-  { "race": "尼崎 5R", "bet": "3-2", "probability": 0.07, "odds": 19.9, "result": "3-2" },
-  { "race": "鳴門 6R", "bet": "4-2", "probability": 0.05, "odds": 28.3, "result": "1-4" },
-  { "race": "児島 8R", "bet": "2-1", "probability": 0.13, "odds": 8.8, "result": "2-1" },
-  { "race": "宮島 9R", "bet": "1-4", "probability": 0.19, "odds": 6.9, "result": "1-3" },
-  { "race": "徳山 1R", "bet": "1-2", "probability": 0.42, "odds": 2.1, "result": "1-2" },
-  { "race": "下関 11R", "bet": "3-1", "probability": 0.09, "odds": 15.6, "result": "3-1" },
-  { "race": "若松 12R", "bet": "1-3", "probability": 0.24, "odds": 4.9, "result": "1-4" },
-
-  { "race": "芦屋 4R", "bet": "2-5", "probability": 0.06, "odds": 25.7, "result": "2-5" },
-  { "race": "福岡 7R", "bet": "5-2", "probability": 0.04, "odds": 42.0, "result": "1-2" },
-  { "race": "唐津 10R", "bet": "1-6", "probability": 0.08, "odds": 16.3, "result": "1-6" },
-  { "race": "大村 12R", "bet": "1-2", "probability": 0.46, "odds": 1.9, "result": "1-2" },
-  { "race": "平和島 3R", "bet": "6-1", "probability": 0.03, "odds": 48.5, "result": "4-1" },
-  { "race": "江戸川 10R", "bet": "2-6", "probability": 0.05, "odds": 31.2, "result": "2-6" },
-  { "race": "桐生 2R", "bet": "1-4", "probability": 0.17, "odds": 7.5, "result": "1-4" },
-  { "race": "蒲郡 9R", "bet": "4-3", "probability": 0.06, "odds": 23.6, "result": "1-3" },
-  { "race": "住之江 11R", "bet": "1-5", "probability": 0.12, "odds": 12.7, "result": "1-5" },
-  { "race": "丸亀 6R", "bet": "3-4", "probability": 0.08, "odds": 14.8, "result": "3-4" }
+  {
+    "race": "蒲郡 1R",
+    "result": "1-3",
+    "odds": {
+      "1-2": 4.8,
+      "1-3": 7.2,
+      "1-4": 9.4,
+      "2-1": 12.4,
+      "3-1": 18.5,
+      "4-1": 22.8
+    },
+    "racers": [
+      { "lane": 1, "winRate": 6.8, "localWinRate": 7.1, "averageStart": 0.14, "motorRate": 38.5, "boatRate": 34.2 },
+      { "lane": 2, "winRate": 5.9, "localWinRate": 5.7, "averageStart": 0.16, "motorRate": 35.1, "boatRate": 31.8 },
+      { "lane": 3, "winRate": 6.2, "localWinRate": 6.5, "averageStart": 0.15, "motorRate": 42.0, "boatRate": 36.5 },
+      { "lane": 4, "winRate": 5.4, "localWinRate": 5.1, "averageStart": 0.18, "motorRate": 33.0, "boatRate": 30.0 },
+      { "lane": 5, "winRate": 4.8, "localWinRate": 4.9, "averageStart": 0.19, "motorRate": 29.5, "boatRate": 28.0 },
+      { "lane": 6, "winRate": 4.2, "localWinRate": 4.0, "averageStart": 0.21, "motorRate": 27.0, "boatRate": 25.5 }
+    ]
+  },
+  {
+    "race": "住之江 5R",
+    "result": "1-2",
+    "odds": {
+      "1-2": 3.4,
+      "1-3": 5.8,
+      "1-4": 8.1,
+      "2-1": 9.6,
+      "3-1": 15.2,
+      "4-1": 21.0
+    },
+    "racers": [
+      { "lane": 1, "winRate": 7.4, "localWinRate": 7.6, "averageStart": 0.13, "motorRate": 44.2, "boatRate": 39.5 },
+      { "lane": 2, "winRate": 6.1, "localWinRate": 6.0, "averageStart": 0.15, "motorRate": 36.8, "boatRate": 32.6 },
+      { "lane": 3, "winRate": 5.8, "localWinRate": 5.5, "averageStart": 0.17, "motorRate": 34.1, "boatRate": 33.3 },
+      { "lane": 4, "winRate": 5.2, "localWinRate": 5.3, "averageStart": 0.18, "motorRate": 31.0, "boatRate": 30.2 },
+      { "lane": 5, "winRate": 4.9, "localWinRate": 4.7, "averageStart": 0.2, "motorRate": 28.7, "boatRate": 27.9 },
+      { "lane": 6, "winRate": 4.4, "localWinRate": 4.3, "averageStart": 0.22, "motorRate": 25.4, "boatRate": 26.1 }
+    ]
+  }
 ]
