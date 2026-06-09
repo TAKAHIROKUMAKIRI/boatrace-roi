@@ -136,6 +136,7 @@ export default function Home() {
     payout,
     profit,
     roi,
+    evComparisons,
   };
 });
         
@@ -289,6 +290,59 @@ export default function Home() {
           </div>
         </section>
 
+        <section
+  style={{
+    background: "#ffffff",
+    padding: "20px",
+    borderRadius: "14px",
+    boxShadow: "0 8px 24px rgba(15, 23, 42, 0.08)",
+    marginBottom: "24px",
+    overflowX: "auto",
+  }}
+>
+  <h2 style={{ fontSize: "20px", marginBottom: "16px" }}>
+    EV別バックテスト比較
+  </h2>
+
+  <table
+    style={{
+      width: "100%",
+      borderCollapse: "collapse",
+      fontSize: "14px",
+    }}
+  >
+    <thead>
+      <tr style={{ background: "#f9fafb" }}>
+        <Th>EV条件</Th>
+        <Th>購入点数</Th>
+        <Th>的中数</Th>
+        <Th>的中率</Th>
+        <Th>投資額</Th>
+        <Th>払戻額</Th>
+        <Th>収支</Th>
+        <Th>ROI</Th>
+      </tr>
+    </thead>
+    <tbody>
+      {result.evComparisons.map((row) => (
+        <tr key={row.threshold}>
+          <Td>EV &gt;= {row.threshold.toFixed(2)}</Td>
+          <Td>{row.betCount}</Td>
+          <Td>{row.hitCount}</Td>
+          <Td>{row.hitRate.toFixed(1)}%</Td>
+          <Td>{yen(row.investment)}</Td>
+          <Td>{yen(row.payout)}</Td>
+          <Td>
+            {row.profit >= 0 ? "+" : ""}
+            {yen(row.profit)}
+          </Td>
+          <Td>{row.roi.toFixed(1)}%</Td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</section>
+        
         <Table
           title="購入対象"
           rows={result.bets}
