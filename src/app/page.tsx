@@ -36,7 +36,7 @@ export default function Home() {
   const yen = (value: number) => `¥${value.toLocaleString()}`;
 
   useEffect(() => {
-    fetch("/sample-races.json")
+    fetch("/backtest-races.json")
       .then((res) => res.json())
       .then((data) => setRaces(data))
       .catch(() => setRaces([]));
