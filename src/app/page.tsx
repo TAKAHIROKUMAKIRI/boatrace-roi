@@ -12,7 +12,10 @@ type Bet = {
 
 export default function Home() {
   const [evThreshold, setEvThreshold] = useState(1.15);
-  const [betsData, setBetsData] = useState<Bet[]>([]);
+const [minOdds, setMinOdds] = useState(4);
+const [maxOdds, setMaxOdds] = useState(50);
+
+const [betsData, setBetsData] = useState<Bet[]>([]);
   const stake = 1000;
 
   useEffect(() => {
@@ -29,7 +32,12 @@ export default function Home() {
         ev: b.probability * b.odds,
         hit: b.bet === b.result,
       }))
-      .filter((b) => b.ev >= evThreshold);
+      .filter(
+  (b) =>
+    b.ev >= evThreshold &&
+    b.odds >= minOdds &&
+    b.odds <= maxOdds
+);
 
     const investment = bets.length * stake;
     const payout = bets.reduce((sum, b) => sum + (b.hit ? b.odds * stake : 0), 0);
@@ -39,24 +47,51 @@ export default function Home() {
     const hitRate = bets.length > 0 ? (hitCount / bets.length) * 100 : 0;
 
     return { bets, investment, payout, profit, roi, hitCount, hitRate };
-  }, [betsData, evThreshold]);
+  }, [betsData, evThreshold, minOdds, maxOdds]);
 
   return (
     <main style={{ padding: "24px", maxWidth: "960px" }}>
       <h1>競艇2連単 ROIバックテスト</h1>
 
-      <div style={{ marginTop: "24px" }}>
-        <label>
-          EV閾値：
-          <input
-            type="number"
-            step="0.05"
-            value={evThreshold}
-            onChange={(e) => setEvThreshold(Number(e.target.value))}
-            style={{ marginLeft: "8px", padding: "6px", width: "100px" }}
-          />
-        </label>
-      </div>
+      <div
+  style={{
+    marginTop: "24px",
+    display: "flex",
+    gap: "24px",
+    flexWrap: "wrap",
+  }}
+>
+  <label>
+    EV閾値
+    <br />
+    <input
+      type="number"
+      step="0.05"
+      value={evThreshold}
+      onChange={(e) => setEvThreshold(Number(e.target.value))}
+    />
+  </label>
+
+  <label>
+    最低オッズ
+    <br />
+    <input
+      type="number"
+      value={minOdds}
+      onChange={(e) => setMinOdds(Number(e.target.value))}
+    />
+  </label>
+
+  <label>
+    最高オッズ
+    <br />
+    <input
+      type="number"
+      value={maxOdds}
+      onChange={(e) => setMaxOdds(Number(e.target.value))}
+    />
+  </label>
+</div>
 
       <div style={{ marginTop: "24px", lineHeight: 1.9 }}>
         <p>総候補数: {betsData.length}</p>
