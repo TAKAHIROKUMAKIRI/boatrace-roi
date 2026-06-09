@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type Bet = {
   race: string;
@@ -10,20 +10,20 @@ type Bet = {
   result: string;
 };
 
-const sampleBets: Bet[] = [
-  { race: "蒲郡 1R", bet: "1-3", probability: 0.18, odds: 7.2, result: "1-3" },
-  { race: "蒲郡 2R", bet: "2-1", probability: 0.09, odds: 12.4, result: "1-2" },
-  { race: "住之江 5R", bet: "1-2", probability: 0.31, odds: 3.4, result: "1-2" },
-  { race: "桐生 8R", bet: "3-1", probability: 0.08, odds: 18.5, result: "3-1" },
-  { race: "丸亀 11R", bet: "1-4", probability: 0.16, odds: 8.1, result: "1-5" },
-];
-
 export default function Home() {
   const [evThreshold, setEvThreshold] = useState(1.15);
+  const [betsData, setBetsData] = useState<Bet[]>([]);
   const stake = 1000;
 
+  useEffect(() => {
+    fetch("/sample-races.json")
+      .then((res) => res.json())
+      .then((data) => setBetsData(data))
+      .catch(() => setBetsData([]));
+  }, []);
+
   const result = useMemo(() => {
-    const bets = sampleBets
+    const bets = betsData
       .map((b) => ({
         ...b,
         ev: b.probability * b.odds,
@@ -39,7 +39,7 @@ export default function Home() {
     const hitRate = bets.length > 0 ? (hitCount / bets.length) * 100 : 0;
 
     return { bets, investment, payout, profit, roi, hitCount, hitRate };
-  }, [evThreshold]);
+  }, [betsData, evThreshold]);
 
   return (
     <main style={{ padding: "24px", maxWidth: "960px" }}>
@@ -59,7 +59,7 @@ export default function Home() {
       </div>
 
       <div style={{ marginTop: "24px", lineHeight: 1.9 }}>
-        <p>総候補数: {sampleBets.length}</p>
+        <p>総候補数: {betsData.length}</p>
         <p>購入点数: {result.bets.length}</p>
         <p>的中数: {result.hitCount}</p>
         <p>的中率: {result.hitRate.toFixed(1)}%</p>
