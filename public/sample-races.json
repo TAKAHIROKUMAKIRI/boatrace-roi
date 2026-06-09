@@ -1,0 +1,23 @@
+[
+  {
+    "race": "蒲郡 1R",
+    "bet": "1-3",
+    "probability": 0.18,
+    "odds": 7.2,
+    "result": "1-3"
+  },
+  {
+    "race": "蒲郡 2R",
+    "bet": "2-1",
+    "probability": 0.09,
+    "odds": 12.4,
+    "result": "1-2"
+  },
+  {
+    "race": "住之江 5R",
+    "bet": "1-2",
+    "probability": 0.31,
+    "odds": 3.4,
+    "result": "1-2"
+  }
+]
