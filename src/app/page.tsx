@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { predictExacta, type Racer } from "@/lib/predict";
+import { predictExacta, type Racer } from "../lib/predict";
 
 type Race = {
   race: string;
