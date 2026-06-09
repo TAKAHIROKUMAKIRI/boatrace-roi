@@ -87,21 +87,21 @@ export default function Home() {
     const boughtKeys = new Set(bets.map((b) => `${b.race}-${b.bet}`));
 
     const skippedBets = allBets
-      .filter((b) => !boughtKeys.has(`${b.race}-${b.bet}`))
-      .map((b) => {
-        let reason = "見送り";
+  .filter((b) => !boughtKeys.has(`${b.race}-${b.bet}`))
+  .map((b) => {
+    let reason = "見送り";
 
-        if (b.ev < evThreshold) reason = "EV不足";
-        else if (b.odds < minOdds) reason = "最低オッズ未満";
-        else if (b.odds > maxOdds) reason = "最高オッズ超過";
-        else reason = "1レース上限で除外";
+    if (b.ev < evThreshold) reason = "EV不足";
+    else if (b.odds < minOdds) reason = "最低オッズ未満";
+    else if (b.odds > maxOdds) reason = "最高オッズ超過";
+    else reason = "1レース上限で除外";
 
-        const evComparisons = [1.05, 1.1, 1.15, 1.2, 1.3].map((threshold) => {
+    return { ...b, reason };
+  });
+
+const evComparisons = [1.05, 1.1, 1.15, 1.2, 1.3].map((threshold) => {
   const filtered = allBets.filter(
-    (b) =>
-      b.ev >= threshold &&
-      b.odds >= minOdds &&
-      b.odds <= maxOdds
+    (b) => b.ev >= threshold && b.odds >= minOdds && b.odds <= maxOdds
   );
 
   const groups = filtered.reduce<Record<string, BetResult[]>>((acc, bet) => {
@@ -123,9 +123,7 @@ export default function Home() {
   const roi = investment > 0 ? (payout / investment) * 100 : 0;
   const hitCount = comparisonBets.filter((b) => b.hit).length;
   const hitRate =
-    comparisonBets.length > 0
-      ? (hitCount / comparisonBets.length) * 100
-      : 0;
+    comparisonBets.length > 0 ? (hitCount / comparisonBets.length) * 100 : 0;
 
   return {
     threshold,
@@ -136,7 +134,6 @@ export default function Home() {
     payout,
     profit,
     roi,
-    evComparisons,
   };
 });
         
