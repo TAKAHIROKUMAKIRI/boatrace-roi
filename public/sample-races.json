@@ -1,7 +1,13 @@
 [
   {
+    "raceId": "20260609-gamagori-1",
+    "date": "2026-06-09",
+    "venueCode": "07",
+    "venueName": "蒲郡",
+    "raceNo": 1,
     "race": "蒲郡 1R",
     "result": "1-3",
+    "payout": 7200,
     "odds": {
       "1-2": 4.8,
       "1-3": 7.2,
@@ -11,17 +17,83 @@
       "4-1": 22.8
     },
     "racers": [
-      { "lane": 1, "winRate": 6.8, "localWinRate": 7.1, "averageStart": 0.14, "motorRate": 38.5, "boatRate": 34.2 },
-      { "lane": 2, "winRate": 5.9, "localWinRate": 5.7, "averageStart": 0.16, "motorRate": 35.1, "boatRate": 31.8 },
-      { "lane": 3, "winRate": 6.2, "localWinRate": 6.5, "averageStart": 0.15, "motorRate": 42.0, "boatRate": 36.5 },
-      { "lane": 4, "winRate": 5.4, "localWinRate": 5.1, "averageStart": 0.18, "motorRate": 33.0, "boatRate": 30.0 },
-      { "lane": 5, "winRate": 4.8, "localWinRate": 4.9, "averageStart": 0.19, "motorRate": 29.5, "boatRate": 28.0 },
-      { "lane": 6, "winRate": 4.2, "localWinRate": 4.0, "averageStart": 0.21, "motorRate": 27.0, "boatRate": 25.5 }
+      {
+        "lane": 1,
+        "racerName": "サンプル太郎",
+        "winRate": 6.8,
+        "localWinRate": 7.1,
+        "averageStart": 0.14,
+        "motorNo": 11,
+        "motorRate": 38.5,
+        "boatNo": 22,
+        "boatRate": 34.2
+      },
+      {
+        "lane": 2,
+        "racerName": "サンプル次郎",
+        "winRate": 5.9,
+        "localWinRate": 5.7,
+        "averageStart": 0.16,
+        "motorNo": 18,
+        "motorRate": 35.1,
+        "boatNo": 31,
+        "boatRate": 31.8
+      },
+      {
+        "lane": 3,
+        "racerName": "サンプル三郎",
+        "winRate": 6.2,
+        "localWinRate": 6.5,
+        "averageStart": 0.15,
+        "motorNo": 25,
+        "motorRate": 42.0,
+        "boatNo": 44,
+        "boatRate": 36.5
+      },
+      {
+        "lane": 4,
+        "racerName": "サンプル四郎",
+        "winRate": 5.4,
+        "localWinRate": 5.1,
+        "averageStart": 0.18,
+        "motorNo": 9,
+        "motorRate": 33.0,
+        "boatNo": 12,
+        "boatRate": 30.0
+      },
+      {
+        "lane": 5,
+        "racerName": "サンプル五郎",
+        "winRate": 4.8,
+        "localWinRate": 4.9,
+        "averageStart": 0.19,
+        "motorNo": 33,
+        "motorRate": 29.5,
+        "boatNo": 51,
+        "boatRate": 28.0
+      },
+      {
+        "lane": 6,
+        "racerName": "サンプル六郎",
+        "winRate": 4.2,
+        "localWinRate": 4.0,
+        "averageStart": 0.21,
+        "motorNo": 40,
+        "motorRate": 27.0,
+        "boatNo": 60,
+        "boatRate": 25.5
+      }
     ]
   },
   {
+    "raceId": "20260609-suminoe-5",
+    "date": "2026-06-09",
+    "venueCode": "12",
+    "venueName": "住之江",
+    "raceNo": 5,
     "race": "住之江 5R",
     "result": "1-2",
+    "payout": 3400,
     "odds": {
       "1-2": 3.4,
       "1-3": 5.8,
@@ -31,12 +103,72 @@
       "4-1": 21.0
     },
     "racers": [
-      { "lane": 1, "winRate": 7.4, "localWinRate": 7.6, "averageStart": 0.13, "motorRate": 44.2, "boatRate": 39.5 },
-      { "lane": 2, "winRate": 6.1, "localWinRate": 6.0, "averageStart": 0.15, "motorRate": 36.8, "boatRate": 32.6 },
-      { "lane": 3, "winRate": 5.8, "localWinRate": 5.5, "averageStart": 0.17, "motorRate": 34.1, "boatRate": 33.3 },
-      { "lane": 4, "winRate": 5.2, "localWinRate": 5.3, "averageStart": 0.18, "motorRate": 31.0, "boatRate": 30.2 },
-      { "lane": 5, "winRate": 4.9, "localWinRate": 4.7, "averageStart": 0.2, "motorRate": 28.7, "boatRate": 27.9 },
-      { "lane": 6, "winRate": 4.4, "localWinRate": 4.3, "averageStart": 0.22, "motorRate": 25.4, "boatRate": 26.1 }
+      {
+        "lane": 1,
+        "racerName": "住之江一郎",
+        "winRate": 7.4,
+        "localWinRate": 7.6,
+        "averageStart": 0.13,
+        "motorNo": 15,
+        "motorRate": 44.2,
+        "boatNo": 28,
+        "boatRate": 39.5
+      },
+      {
+        "lane": 2,
+        "racerName": "住之江二郎",
+        "winRate": 6.1,
+        "localWinRate": 6.0,
+        "averageStart": 0.15,
+        "motorNo": 19,
+        "motorRate": 36.8,
+        "boatNo": 30,
+        "boatRate": 32.6
+      },
+      {
+        "lane": 3,
+        "racerName": "住之江三郎",
+        "winRate": 5.8,
+        "localWinRate": 5.5,
+        "averageStart": 0.17,
+        "motorNo": 21,
+        "motorRate": 34.1,
+        "boatNo": 41,
+        "boatRate": 33.3
+      },
+      {
+        "lane": 4,
+        "racerName": "住之江四郎",
+        "winRate": 5.2,
+        "localWinRate": 5.3,
+        "averageStart": 0.18,
+        "motorNo": 7,
+        "motorRate": 31.0,
+        "boatNo": 10,
+        "boatRate": 30.2
+      },
+      {
+        "lane": 5,
+        "racerName": "住之江五郎",
+        "winRate": 4.9,
+        "localWinRate": 4.7,
+        "averageStart": 0.2,
+        "motorNo": 35,
+        "motorRate": 28.7,
+        "boatNo": 55,
+        "boatRate": 27.9
+      },
+      {
+        "lane": 6,
+        "racerName": "住之江六郎",
+        "winRate": 4.4,
+        "localWinRate": 4.3,
+        "averageStart": 0.22,
+        "motorNo": 42,
+        "motorRate": 25.4,
+        "boatNo": 62,
+        "boatRate": 26.1
+      }
     ]
   }
 ]
