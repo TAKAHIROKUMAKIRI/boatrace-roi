@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
   const jcd = searchParams.get("jcd") ?? "07";
   const rno = searchParams.get("rno") ?? "1";
 
-  const url = `https://www.boatrace.jp/owpc/pc/race/raceresult?rno=${rno}&jcd=${jcd}&hd=${date}`;
+  const url = `https://www.boatrace.jp/owpc/pc/race/beforeinfo?rno=${rno}&jcd=${jcd}&hd=${date}`;
 
   try {
     const response = await fetch(url, {
