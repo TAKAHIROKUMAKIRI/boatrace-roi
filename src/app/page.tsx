@@ -94,6 +94,31 @@ const bets = Object.values(raceGroups).flatMap((raceBets) =>
     const hitCount = bets.filter((b) => b.hit).length;
     const hitRate = bets.length > 0 ? (hitCount / bets.length) * 100 : 0;
 
+    const boughtKeys = new Set(
+  bets.map((b) => `${b.race}-${b.bet}`)
+);
+
+const skippedBets = allBets
+  .filter((b) => !boughtKeys.has(`${b.race}-${b.bet}`))
+  .map((b) => {
+    let reason = "見送り";
+
+    if (b.ev < evThreshold) {
+      reason = "EV不足";
+    } else if (b.odds < minOdds) {
+      reason = "最低オッズ未満";
+    } else if (b.odds > maxOdds) {
+      reason = "最高オッズ超過";
+    } else {
+      reason = "1レース上限で除外";
+    }
+
+    return {
+      ...b,
+      reason,
+    };
+  });
+    
     return {
       totalCandidates: allBets.length,
       bets,
