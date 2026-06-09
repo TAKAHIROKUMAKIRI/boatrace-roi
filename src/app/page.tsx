@@ -59,12 +59,30 @@ export default function Home() {
       }
     }
 
-    const bets = allBets.filter(
-      (b) =>
-        b.ev >= evThreshold &&
-        b.odds >= minOdds &&
-        b.odds <= maxOdds
-    );
+    const filteredBets = allBets.filter(
+  (b) =>
+    b.ev >= evThreshold &&
+    b.odds >= minOdds &&
+    b.odds <= maxOdds
+);
+
+const raceGroups = filteredBets.reduce<Record<string, BetResult[]>>(
+  (groups, bet) => {
+    if (!groups[bet.race]) {
+      groups[bet.race] = [];
+    }
+
+    groups[bet.race].push(bet);
+    return groups;
+  },
+  {}
+);
+
+const bets = Object.values(raceGroups).flatMap((raceBets) =>
+  raceBets
+    .sort((a, b) => b.ev - a.ev)
+    .slice(0, 3)
+);
 
     const investment = bets.length * stake;
     const payout = bets.reduce(
