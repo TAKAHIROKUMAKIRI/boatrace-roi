@@ -144,16 +144,17 @@ export default function Home() {
       });
 
     return {
-      totalCandidates: allBets.length,
-      bets,
-      skippedBets,
-      investment,
-      payout,
-      profit,
-      roi,
-      hitCount,
-      hitRate,
-    };
+  totalCandidates: allBets.length,
+  bets,
+  skippedBets,
+  evComparisons,
+  investment,
+  payout,
+  profit,
+  roi,
+  hitCount,
+  hitRate,
+};
   }, [races, evThreshold, minOdds, maxOdds]);
 
   return (
