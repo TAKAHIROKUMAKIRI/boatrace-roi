@@ -343,6 +343,77 @@ export default function Home() {
     </tbody>
   </table>
 </section>
+
+        <section
+  style={{
+    background: "#ffffff",
+    padding: "20px",
+    borderRadius: "14px",
+    boxShadow: "0 8px 24px rgba(15, 23, 42, 0.08)",
+    marginBottom: "24px",
+  }}
+>
+  <h2 style={{ fontSize: "20px", marginBottom: "16px" }}>
+    レース詳細
+  </h2>
+
+  {races.map((race) => (
+    <div
+      key={race.raceId}
+      style={{
+        border: "1px solid #e5e7eb",
+        borderRadius: "12px",
+        padding: "16px",
+        marginBottom: "16px",
+      }}
+    >
+      <h3 style={{ fontSize: "18px", marginBottom: "8px" }}>
+        {race.date} / {race.venueName} {race.raceNo}R
+      </h3>
+
+      <p>結果：{race.result}</p>
+      <p>2連単払戻：¥{race.payout.toLocaleString()}</p>
+
+      <table
+        style={{
+          width: "100%",
+          borderCollapse: "collapse",
+          marginTop: "12px",
+          fontSize: "14px",
+        }}
+      >
+        <thead>
+          <tr style={{ background: "#f9fafb" }}>
+            <Th>枠</Th>
+            <Th>選手名</Th>
+            <Th>全国勝率</Th>
+            <Th>当地勝率</Th>
+            <Th>平均ST</Th>
+            <Th>モーター</Th>
+            <Th>モーター2連率</Th>
+            <Th>ボート</Th>
+            <Th>ボート2連率</Th>
+          </tr>
+        </thead>
+        <tbody>
+          {race.racers.map((racer) => (
+            <tr key={`${race.raceId}-${racer.lane}`}>
+              <Td>{racer.lane}</Td>
+              <Td>{racer.racerName}</Td>
+              <Td>{racer.winRate.toFixed(2)}</Td>
+              <Td>{racer.localWinRate.toFixed(2)}</Td>
+              <Td>{racer.averageStart.toFixed(2)}</Td>
+              <Td>{racer.motorNo}</Td>
+              <Td>{racer.motorRate.toFixed(1)}%</Td>
+              <Td>{racer.boatNo}</Td>
+              <Td>{racer.boatRate.toFixed(1)}%</Td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  ))}
+</section>
         
         <Table
           title="購入対象"
