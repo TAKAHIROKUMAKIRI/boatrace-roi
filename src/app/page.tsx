@@ -4,8 +4,14 @@ import { useEffect, useMemo, useState } from "react";
 import { predictExacta, type Racer } from "../lib/predict";
 
 type Race = {
+  raceId: string;
+  date: string;
+  venueCode: string;
+  venueName: string;
+  raceNo: number;
   race: string;
   result: string;
+  payout: number;
   odds: Record<string, number>;
   racers: Racer[];
 };
