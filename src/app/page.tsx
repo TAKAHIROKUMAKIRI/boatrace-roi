@@ -120,15 +120,16 @@ const skippedBets = allBets
   });
     
     return {
-      totalCandidates: allBets.length,
-      bets,
-      investment,
-      payout,
-      profit,
-      roi,
-      hitCount,
-      hitRate,
-    };
+  totalCandidates: allBets.length,
+  bets,
+  skippedBets,
+  investment,
+  payout,
+  profit,
+  roi,
+  hitCount,
+  hitRate,
+};
   }, [races, evThreshold, minOdds, maxOdds]);
 
   return (
