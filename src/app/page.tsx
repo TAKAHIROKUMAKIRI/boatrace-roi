@@ -96,6 +96,49 @@ export default function Home() {
         else if (b.odds > maxOdds) reason = "最高オッズ超過";
         else reason = "1レース上限で除外";
 
+        const evComparisons = [1.05, 1.1, 1.15, 1.2, 1.3].map((threshold) => {
+  const filtered = allBets.filter(
+    (b) =>
+      b.ev >= threshold &&
+      b.odds >= minOdds &&
+      b.odds <= maxOdds
+  );
+
+  const groups = filtered.reduce<Record<string, BetResult[]>>((acc, bet) => {
+    if (!acc[bet.race]) acc[bet.race] = [];
+    acc[bet.race].push(bet);
+    return acc;
+  }, {});
+
+  const comparisonBets = Object.values(groups).flatMap((raceBets) =>
+    raceBets.sort((a, b) => b.ev - a.ev).slice(0, 3)
+  );
+
+  const investment = comparisonBets.length * stake;
+  const payout = comparisonBets.reduce(
+    (sum, b) => sum + (b.hit ? b.odds * stake : 0),
+    0
+  );
+  const profit = payout - investment;
+  const roi = investment > 0 ? (payout / investment) * 100 : 0;
+  const hitCount = comparisonBets.filter((b) => b.hit).length;
+  const hitRate =
+    comparisonBets.length > 0
+      ? (hitCount / comparisonBets.length) * 100
+      : 0;
+
+  return {
+    threshold,
+    betCount: comparisonBets.length,
+    hitCount,
+    hitRate,
+    investment,
+    payout,
+    profit,
+    roi,
+  };
+});
+        
         return { ...b, reason };
       });
 
