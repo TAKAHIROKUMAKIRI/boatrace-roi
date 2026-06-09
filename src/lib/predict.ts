@@ -1,9 +1,12 @@
 export type Racer = {
   lane: number;
+  racerName: string;
   winRate: number;
   localWinRate: number;
   averageStart: number;
+  motorNo: number;
   motorRate: number;
+  boatNo: number;
   boatRate: number;
 };
 
