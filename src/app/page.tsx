@@ -193,6 +193,37 @@ const skippedBets = allBets
 
       <h2 style={{ marginTop: "32px" }}>購入対象</h2>
 
+      <h2 style={{ marginTop: "32px" }}>見送り買い目</h2>
+
+<table
+  border={1}
+  cellPadding={8}
+  style={{ marginTop: "12px", borderCollapse: "collapse" }}
+>
+  <thead>
+    <tr>
+      <th>レース</th>
+      <th>買い目</th>
+      <th>予測確率</th>
+      <th>オッズ</th>
+      <th>EV</th>
+      <th>見送り理由</th>
+    </tr>
+  </thead>
+  <tbody>
+    {result.skippedBets.map((b) => (
+      <tr key={`skip-${b.race}-${b.bet}`}>
+        <td>{b.race}</td>
+        <td>{b.bet}</td>
+        <td>{(b.probability * 100).toFixed(2)}%</td>
+        <td>{b.odds.toFixed(1)}倍</td>
+        <td>{b.ev.toFixed(2)}</td>
+        <td>{b.reason}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+      
       <table
         border={1}
         cellPadding={8}
