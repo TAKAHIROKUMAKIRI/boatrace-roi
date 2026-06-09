@@ -1,0 +1,87 @@
+[
+  {
+    "raceId": "20260609-gamagori-1",
+    "date": "2026-06-09",
+    "venueCode": "07",
+    "venueName": "蒲郡",
+    "raceNo": 1,
+    "result": "1-3",
+    "payout": 7200,
+    "odds": {
+      "1-2": 4.8,
+      "1-3": 7.2,
+      "1-4": 9.4,
+      "2-1": 12.4,
+      "3-1": 18.5,
+      "4-1": 22.8
+    },
+    "racers": [
+      {
+        "lane": 1,
+        "racerName": "サンプル太郎",
+        "winRate": 6.8,
+        "localWinRate": 7.1,
+        "averageStart": 0.14,
+        "motorNo": 11,
+        "motorRate": 38.5,
+        "boatNo": 22,
+        "boatRate": 34.2
+      },
+      {
+        "lane": 2,
+        "racerName": "サンプル次郎",
+        "winRate": 5.9,
+        "localWinRate": 5.7,
+        "averageStart": 0.16,
+        "motorNo": 18,
+        "motorRate": 35.1,
+        "boatNo": 31,
+        "boatRate": 31.8
+      },
+      {
+        "lane": 3,
+        "racerName": "サンプル三郎",
+        "winRate": 6.2,
+        "localWinRate": 6.5,
+        "averageStart": 0.15,
+        "motorNo": 25,
+        "motorRate": 42.0,
+        "boatNo": 44,
+        "boatRate": 36.5
+      },
+      {
+        "lane": 4,
+        "racerName": "サンプル四郎",
+        "winRate": 5.4,
+        "localWinRate": 5.1,
+        "averageStart": 0.18,
+        "motorNo": 9,
+        "motorRate": 33.0,
+        "boatNo": 12,
+        "boatRate": 30.0
+      },
+      {
+        "lane": 5,
+        "racerName": "サンプル五郎",
+        "winRate": 4.8,
+        "localWinRate": 4.9,
+        "averageStart": 0.19,
+        "motorNo": 33,
+        "motorRate": 29.5,
+        "boatNo": 51,
+        "boatRate": 28.0
+      },
+      {
+        "lane": 6,
+        "racerName": "サンプル六郎",
+        "winRate": 4.2,
+        "localWinRate": 4.0,
+        "averageStart": 0.21,
+        "motorNo": 40,
+        "motorRate": 27.0,
+        "boatNo": 60,
+        "boatRate": 25.5
+      }
+    ]
+  }
+]
