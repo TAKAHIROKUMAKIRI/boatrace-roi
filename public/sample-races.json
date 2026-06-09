@@ -1,23 +1,34 @@
 [
-  {
-    "race": "蒲郡 1R",
-    "bet": "1-3",
-    "probability": 0.18,
-    "odds": 7.2,
-    "result": "1-3"
-  },
-  {
-    "race": "蒲郡 2R",
-    "bet": "2-1",
-    "probability": 0.09,
-    "odds": 12.4,
-    "result": "1-2"
-  },
-  {
-    "race": "住之江 5R",
-    "bet": "1-2",
-    "probability": 0.31,
-    "odds": 3.4,
-    "result": "1-2"
-  }
+  { "race": "蒲郡 1R", "bet": "1-3", "probability": 0.18, "odds": 7.2, "result": "1-3" },
+  { "race": "蒲郡 2R", "bet": "2-1", "probability": 0.09, "odds": 12.4, "result": "1-2" },
+  { "race": "住之江 5R", "bet": "1-2", "probability": 0.31, "odds": 3.4, "result": "1-2" },
+  { "race": "桐生 8R", "bet": "3-1", "probability": 0.08, "odds": 18.5, "result": "3-1" },
+  { "race": "丸亀 11R", "bet": "1-4", "probability": 0.16, "odds": 8.1, "result": "1-5" },
+  { "race": "戸田 3R", "bet": "4-1", "probability": 0.06, "odds": 22.8, "result": "4-1" },
+  { "race": "江戸川 6R", "bet": "2-3", "probability": 0.11, "odds": 9.7, "result": "1-2" },
+  { "race": "多摩川 9R", "bet": "1-5", "probability": 0.14, "odds": 10.2, "result": "1-5" },
+  { "race": "浜名湖 4R", "bet": "5-1", "probability": 0.04, "odds": 36.5, "result": "2-1" },
+  { "race": "常滑 7R", "bet": "1-6", "probability": 0.07, "odds": 21.4, "result": "1-6" },
+
+  { "race": "津 2R", "bet": "2-4", "probability": 0.10, "odds": 11.1, "result": "2-4" },
+  { "race": "三国 10R", "bet": "1-3", "probability": 0.22, "odds": 5.6, "result": "1-2" },
+  { "race": "びわこ 12R", "bet": "1-2", "probability": 0.38, "odds": 2.8, "result": "1-2" },
+  { "race": "尼崎 5R", "bet": "3-2", "probability": 0.07, "odds": 19.9, "result": "3-2" },
+  { "race": "鳴門 6R", "bet": "4-2", "probability": 0.05, "odds": 28.3, "result": "1-4" },
+  { "race": "児島 8R", "bet": "2-1", "probability": 0.13, "odds": 8.8, "result": "2-1" },
+  { "race": "宮島 9R", "bet": "1-4", "probability": 0.19, "odds": 6.9, "result": "1-3" },
+  { "race": "徳山 1R", "bet": "1-2", "probability": 0.42, "odds": 2.1, "result": "1-2" },
+  { "race": "下関 11R", "bet": "3-1", "probability": 0.09, "odds": 15.6, "result": "3-1" },
+  { "race": "若松 12R", "bet": "1-3", "probability": 0.24, "odds": 4.9, "result": "1-4" },
+
+  { "race": "芦屋 4R", "bet": "2-5", "probability": 0.06, "odds": 25.7, "result": "2-5" },
+  { "race": "福岡 7R", "bet": "5-2", "probability": 0.04, "odds": 42.0, "result": "1-2" },
+  { "race": "唐津 10R", "bet": "1-6", "probability": 0.08, "odds": 16.3, "result": "1-6" },
+  { "race": "大村 12R", "bet": "1-2", "probability": 0.46, "odds": 1.9, "result": "1-2" },
+  { "race": "平和島 3R", "bet": "6-1", "probability": 0.03, "odds": 48.5, "result": "4-1" },
+  { "race": "江戸川 10R", "bet": "2-6", "probability": 0.05, "odds": 31.2, "result": "2-6" },
+  { "race": "桐生 2R", "bet": "1-4", "probability": 0.17, "odds": 7.5, "result": "1-4" },
+  { "race": "蒲郡 9R", "bet": "4-3", "probability": 0.06, "odds": 23.6, "result": "1-3" },
+  { "race": "住之江 11R", "bet": "1-5", "probability": 0.12, "odds": 12.7, "result": "1-5" },
+  { "race": "丸亀 6R", "bet": "3-4", "probability": 0.08, "odds": 14.8, "result": "3-4" }
 ]
