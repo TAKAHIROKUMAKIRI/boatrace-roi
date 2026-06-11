@@ -57,8 +57,8 @@ async function fetchText(url: string) {
 
 function extractResult(text: string) {
   const normalized = text
-  .replace(/&yen;/g, "¥")
-  .replace(/\s+/g, " ");
+    .replace(/&yen;/g, "¥")
+    .replace(/\s+/g, " ");
 
   const index = normalized.indexOf("2連単");
 
@@ -72,8 +72,6 @@ function extractResult(text: string) {
 
   const snippet = normalized.substring(index, index + 300);
 
-  const payoutMatch = snippet.match(/¥\s*([\d,]+)/);
-  
   const match = snippet.match(/2連単\s+(\d)\s*-\s*(\d)/);
 
   if (!match) {
@@ -84,17 +82,24 @@ function extractResult(text: string) {
     };
   }
 
-  const payoutMatch = snippet.match(
-  /2連単\s+\d\s*-\s*\d\s*¥?(\d[\d,]*)/
-);
+  const yenIndex = snippet.indexOf("¥");
+
+  let payout = null;
+
+  if (yenIndex >= 0) {
+    const afterYen = snippet.substring(yenIndex + 1);
+    const numberMatch = afterYen.match(/^(\d[\d,]*)/);
+
+    if (numberMatch) {
+      payout = Number(numberMatch[1].replace(/,/g, ""));
+    }
+  }
 
   return {
-  result: `${match[1]}-${match[2]}`,
-  payout: payoutMatch
-    ? Number(payoutMatch[1].replace(/,/g, ""))
-    : null,
-  debugSnippet: snippet,
-};
+    result: `${match[1]}-${match[2]}`,
+    payout,
+    debugSnippet: snippet,
+  };
 }
 
 async function getSingleRace(date: string, jcd: string, rno: string) {
