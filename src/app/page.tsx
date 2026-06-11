@@ -48,11 +48,18 @@ export default function Home() {
   const yen = (value: number) => `¥${value.toLocaleString()}`;
 
   useEffect(() => {
-    fetch("/backtest-races.json")
-      .then((res) => res.json())
-      .then((data) => setRaces(data))
-      .catch(() => setRaces([]));
-  }, []);
+  fetch("/backtest-races.json")
+    .then((res) => res.json())
+    .then((data) => setRaces(data))
+    .catch(() => setRaces([]));
+}, []);
+
+useEffect(() => {
+  fetch("/api/boatrace?mode=backtest&date=20260609&jcd=07")
+    .then((res) => res.json())
+    .then((data) => setOfficialRaces(data.races ?? []))
+    .catch(() => setOfficialRaces([]));
+}, []);
 
   const result = useMemo(() => {
     const allBets: BetResult[] = [];
