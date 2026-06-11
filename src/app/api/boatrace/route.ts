@@ -56,32 +56,39 @@ async function fetchText(url: string) {
 }
 
 function extractResult(text: string) {
-  const normalized = text
-    .replace(/&yen;/g, "¥")
-    .replace(/\s+/g, " ");
+  const normalized = text.replace(/\s+/g, " ");
 
-  const payoutMatch = normalized.match(
-    /2連単\s+(\d)\s*-\s*(\d)\s*¥\s*([\d,]+)/
-  );
+  const index = normalized.indexOf("2連単");
 
-  if (!payoutMatch) {
+  if (index < 0) {
     return {
       result: null,
       payout: null,
-      debugSnippet:
-        normalized.indexOf("2連単") >= 0
-          ? normalized.substring(
-              normalized.indexOf("2連単"),
-              normalized.indexOf("2連単") + 200
-            )
-          : "2連単 not found",
+      debugSnippet: "2連単 not found",
     };
   }
 
+  const snippet = normalized.substring(index, index + 300);
+
+  const match = snippet.match(/2連単\s+(\d)\s*-\s*(\d)/);
+
+  if (!match) {
+    return {
+      result: null,
+      payout: null,
+      debugSnippet: snippet,
+    };
+  }
+
+  const payoutMatch = snippet.match(/(\d[\d,]*)/g);
+
   return {
-    result: `${payoutMatch[1]}-${payoutMatch[2]}`,
-    payout: Number(payoutMatch[3].replace(/,/g, "")),
-    debugSnippet: "matched",
+    result: `${match[1]}-${match[2]}`,
+    payout:
+      payoutMatch && payoutMatch.length >= 3
+        ? Number(payoutMatch[2].replace(/,/g, ""))
+        : null,
+    debugSnippet: snippet,
   };
 }
 
