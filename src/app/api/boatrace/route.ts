@@ -130,7 +130,7 @@ const resultPage = await fetchText(resultUrl);
 const oddsPage = await fetchText(oddsUrl);
 
 const result = extractResult(resultPage.text);
-const odds = extractOdds2t(oddsPage.text);
+const odds = extractOdds2t(oddsPage.html);
 
   const venueName = VENUE_NAMES[jcd] ?? jcd;
 
