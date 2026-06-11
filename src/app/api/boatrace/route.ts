@@ -103,20 +103,20 @@ function extractResult(text: string) {
   };
 }
 
-function extractOdds2t(text: string) {
-  const normalized = text
-    .replace(/&yen;/g, "¥")
-    .replace(/\s+/g, " ");
-
-  const index = normalized.indexOf("2連単オッズ");
-
-  const snippet =
-    index >= 0
-      ? normalized.substring(index, index + 3000)
-      : normalized.substring(0, 3000);
+function extractOdds2t(html: string) {
+  const matches = [
+    ...html.matchAll(
+      /is-boatColor(\d)[^>]*>(\d)<\/td>\s*<td class="oddsPoint[^"]*">([\d.]+)<\/td>/g
+    ),
+  ];
 
   return {
-    raw: snippet,
+    rawCount: matches.length,
+    preview: matches.slice(0, 20).map((match) => ({
+      boatColor: match[1],
+      number: match[2],
+      odds: Number(match[3]),
+    })),
   };
 }
 
