@@ -104,20 +104,33 @@ function extractResult(text: string) {
 }
 
 function extractOdds2t(html: string) {
-  const matches = [
-    ...html.matchAll(
-      /is-boatColor(\d)[^>]*>(\d)<\/td>\s*<td class="oddsPoint[^"]*">([\d.]+)<\/td>/g
-    ),
+  const odds: Record<string, number> = {};
+
+  const rows = [
+    ...html.matchAll(/<tr>([\s\S]*?)<\/tr>/g),
   ];
 
-  return {
-    rawCount: matches.length,
-    preview: matches.slice(0, 20).map((match) => ({
-      boatColor: match[1],
-      number: match[2],
-      odds: Number(match[3]),
-    })),
-  };
+  for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+    const rowHtml = rows[rowIndex][1];
+
+    const cells = [
+      ...rowHtml.matchAll(
+        /is-boatColor(\d)[^>]*>(\d)<\/td>\s*<td class="oddsPoint[^"]*">([\d.]+)<\/td>/g
+      ),
+    ];
+
+    for (let colIndex = 0; colIndex < cells.length; colIndex++) {
+      const first = colIndex + 1;
+      const second = Number(cells[colIndex][2]);
+      const value = Number(cells[colIndex][3]);
+
+      if (first !== second && value > 0) {
+        odds[`${first}-${second}`] = value;
+      }
+    }
+  }
+
+  return odds;
 }
 
 async function getSingleRace(date: string, jcd: string, rno: string) {
