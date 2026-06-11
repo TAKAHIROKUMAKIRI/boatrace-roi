@@ -56,12 +56,10 @@ async function fetchText(url: string) {
 }
 
 function extractResult(text: string) {
-  const normalized = text
-    .replace(/&yen;/g, "¥")
-    .replace(/\s+/g, " ");
+  const normalized = text.replace(/\s+/g, " ");
 
   const payoutMatch = normalized.match(
-    /2連単\s+(\d)\s+(\d)\s+¥\s*([\d,]+)/
+    /2連単\s+(\d)\s+(\d)\s+(\d[\d,]*)/
   );
 
   if (!payoutMatch) {
@@ -70,6 +68,12 @@ function extractResult(text: string) {
       payout: null,
     };
   }
+
+  return {
+    result: `${payoutMatch[1]}-${payoutMatch[2]}`,
+    payout: Number(payoutMatch[3].replace(/,/g, "")),
+  };
+}
 
   return {
     result: `${payoutMatch[1]}-${payoutMatch[2]}`,
