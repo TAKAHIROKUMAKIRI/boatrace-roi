@@ -56,7 +56,13 @@ async function fetchText(url: string) {
 }
 
 function extractResult(text: string) {
-  const payoutMatch = text.match(/2連単\s+(\d)-(\d)\s+([\d,]+)円/);
+  const normalized = text
+    .replace(/&yen;/g, "¥")
+    .replace(/\s+/g, " ");
+
+  const payoutMatch = normalized.match(
+    /2連単\s+(\d)\s+(\d)\s+¥\s*([\d,]+)/
+  );
 
   if (!payoutMatch) {
     return {
