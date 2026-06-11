@@ -58,6 +58,21 @@ async function fetchText(url: string) {
 function extractResult(text: string) {
   const normalized = text.replace(/\s+/g, " ");
 
+  const index = normalized.indexOf("2連単");
+
+  return {
+    result: null,
+    payout: null,
+    debugSnippet:
+      index >= 0
+        ? normalized.substring(index, index + 200)
+        : "2連単 not found",
+  };
+}
+
+function extractResult(text: string) {
+  const normalized = text.replace(/\s+/g, " ");
+
   const payoutMatch = normalized.match(
     /2連単\s+(\d)\s+(\d)\s+(\d[\d,]*)/
   );
