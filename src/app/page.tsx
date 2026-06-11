@@ -16,6 +16,17 @@ type Race = {
   racers: Racer[];
 };
 
+type OfficialRace = {
+  raceId: string;
+  date: string;
+  venueCode: string;
+  venueName: string;
+  raceNo: number;
+  race: string;
+  result: string | null;
+  payout: number | null;
+};
+
 type BetResult = {
   race: string;
   bet: string;
@@ -31,6 +42,7 @@ export default function Home() {
   const [minOdds, setMinOdds] = useState(4);
   const [maxOdds, setMaxOdds] = useState(50);
   const [races, setRaces] = useState<Race[]>([]);
+  const [officialRaces, setOfficialRaces] = useState<OfficialRace[]>([]);
   const stake = 1000;
 
   const yen = (value: number) => `¥${value.toLocaleString()}`;
@@ -413,6 +425,52 @@ export default function Home() {
       </table>
     </div>
   ))}
+</section>
+
+        <section
+  style={{
+    background: "#ffffff",
+    padding: "20px",
+    borderRadius: "14px",
+    boxShadow: "0 8px 24px rgba(15, 23, 42, 0.08)",
+    marginBottom: "24px",
+    overflowX: "auto",
+  }}
+>
+  <h2 style={{ fontSize: "20px", marginBottom: "16px" }}>
+    公式取得データ（蒲郡 2026-06-09）
+  </h2>
+
+  <table
+    style={{
+      width: "100%",
+      borderCollapse: "collapse",
+      fontSize: "14px",
+    }}
+  >
+    <thead>
+      <tr style={{ background: "#f9fafb" }}>
+        <Th>日付</Th>
+        <Th>場名</Th>
+        <Th>R</Th>
+        <Th>2連単結果</Th>
+        <Th>払戻</Th>
+      </tr>
+    </thead>
+    <tbody>
+      {officialRaces.map((race) => (
+        <tr key={race.raceId}>
+          <Td>{race.date}</Td>
+          <Td>{race.venueName}</Td>
+          <Td>{race.raceNo}R</Td>
+          <Td>{race.result ?? "-"}</Td>
+          <Td>
+            {race.payout ? `¥${race.payout.toLocaleString()}` : "-"}
+          </Td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
 </section>
         
         <Table
