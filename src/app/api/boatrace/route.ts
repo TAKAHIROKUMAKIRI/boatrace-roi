@@ -150,9 +150,10 @@ const odds = extractOdds2t(oddsPage.text);
 
   result: result.result,
   payout: result.payout,
-odds,
+  odds,
+
   debugSnippet: result.debugSnippet,
-    debugOddsPreview: oddsPage.text.slice(0, 1500),
+  debugOddsPreview: oddsPage.text.slice(0, 1500),
 
   sourceUrls: {
     beforeInfo: beforeInfoUrl,
