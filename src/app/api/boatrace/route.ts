@@ -80,14 +80,15 @@ function extractResult(text: string) {
     };
   }
 
-  const payoutMatch = snippet.match(/(\d[\d,]*)/g);
+  const payoutMatch = snippet.match(
+  /2連単\s+\d\s*-\s*\d\s*¥?(\d[\d,]*)/
+);
 
   return {
     result: `${match[1]}-${match[2]}`,
-    payout:
-      payoutMatch && payoutMatch.length >= 3
-        ? Number(payoutMatch[2].replace(/,/g, ""))
-        : null,
+    payout: payoutMatch
+  ? Number(payoutMatch[1].replace(/,/g, ""))
+  : null,
     debugSnippet: snippet,
   };
 }
