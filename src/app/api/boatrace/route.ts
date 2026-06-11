@@ -144,7 +144,7 @@ const odds = extractOdds2t(oddsPage.text);
   },
 
   debug: {
-    beforeInfoTextPreview: beforeInfo.text.slice(0, 1200),
+    beforeInfoTextPreview: beforeInfo.text.slice(0, 3000),
     resultTextPreview: resultPage.text.slice(0, 1200),
   },
 };
