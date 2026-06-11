@@ -102,13 +102,41 @@ function extractResult(text: string) {
   };
 }
 
+function extractOdds2t(text: string) {
+  const normalized = text
+    .replace(/&yen;/g, "¥")
+    .replace(/\s+/g, " ");
+
+  const odds: Record<string, number> = {};
+
+  const pattern = /(\d)-(\d)\s+(\d+\.\d+)/g;
+
+  let match;
+
+  while ((match = pattern.exec(normalized)) !== null) {
+    const first = match[1];
+    const second = match[2];
+    const value = Number(match[3]);
+
+    if (first !== second && value > 0) {
+      odds[`${first}-${second}`] = value;
+    }
+  }
+
+  return odds;
+}
+
 async function getSingleRace(date: string, jcd: string, rno: string) {
   const beforeInfoUrl = `https://www.boatrace.jp/owpc/pc/race/beforeinfo?rno=${rno}&jcd=${jcd}&hd=${date}`;
   const resultUrl = `https://www.boatrace.jp/owpc/pc/race/raceresult?rno=${rno}&jcd=${jcd}&hd=${date}`;
+  const oddsUrl = `https://www.boatrace.jp/owpc/pc/race/odds2tf?rno=${rno}&jcd=${jcd}&hd=${date}`;
 
   const beforeInfo = await fetchText(beforeInfoUrl);
-  const resultPage = await fetchText(resultUrl);
-  const result = extractResult(resultPage.text);
+const resultPage = await fetchText(resultUrl);
+const oddsPage = await fetchText(oddsUrl);
+
+const result = extractResult(resultPage.text);
+const odds = extractOdds2t(oddsPage.text);
 
   const venueName = VENUE_NAMES[jcd] ?? jcd;
 
@@ -122,12 +150,13 @@ async function getSingleRace(date: string, jcd: string, rno: string) {
 
   result: result.result,
   payout: result.payout,
-
+odds,
   debugSnippet: result.debugSnippet,
 
   sourceUrls: {
     beforeInfo: beforeInfoUrl,
     result: resultUrl,
+    odds: oddsUrl,
   },
 
   debug: {
