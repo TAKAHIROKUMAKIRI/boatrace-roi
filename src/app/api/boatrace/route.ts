@@ -104,20 +104,25 @@ function extractResult(text: string) {
 }
 
 function extractOdds2t(html: string) {
+  const odds: Record<string, number> = {};
+
   const matches = [
     ...html.matchAll(
       /is-boatColor(\d)[^>]*>(\d)<\/td>\s*<td class="oddsPoint[^"]*">([\d.]+)<\/td>/g
     ),
   ];
 
-  return {
-    count: matches.length,
-    preview: matches.slice(0, 50).map((m) => ({
-      color: m[1],
-      boat: m[2],
-      odds: m[3],
-    })),
-  };
+  for (const match of matches) {
+    const first = match[1];
+    const second = match[2];
+    const value = Number(match[3]);
+
+    if (first !== second) {
+      odds[`${first}-${second}`] = value;
+    }
+  }
+
+  return odds;
 }
 
 async function getSingleRace(date: string, jcd: string, rno: string) {
