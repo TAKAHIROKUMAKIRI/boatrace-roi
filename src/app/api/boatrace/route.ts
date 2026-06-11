@@ -50,9 +50,10 @@ async function fetchText(url: string) {
   const html = await response.text();
 
   return {
-    html,
-    text: htmlToText(html),
-  };
+  html,
+  text: htmlToText(html),
+  rawHtml: html,
+};
 }
 
 function extractResult(text: string) {
@@ -157,6 +158,7 @@ const odds = extractOdds2t(oddsPage.text);
   debug: {
     beforeInfoTextPreview: beforeInfo.text.slice(0, 3000),
     resultTextPreview: resultPage.text.slice(0, 1200),
+    oddsHtmlPreview: oddsPage.html.slice(0, 5000),
   },
 };
 }
