@@ -22,12 +22,11 @@ type Race = {
 type OfficialRace = {
   raceId: string;
   date: string;
-  venueCode: string;
   venueName: string;
   raceNo: number;
-  race: string;
   result: string | null;
   payout: number | null;
+  odds?: Record<string, number>;
 };
 
 type BetResult = {
