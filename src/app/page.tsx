@@ -48,10 +48,12 @@ export default function Home() {
   const yen = (value: number) => `¥${value.toLocaleString()}`;
 
   useEffect(() => {
-  fetch("/backtest-races.json")
+  fetch("/api/boatrace?mode=backtest&date=20260609&jcd=07")
     .then((res) => res.json())
-    .then((data) => setRaces(data))
-    .catch(() => setRaces([]));
+    .then((data) => {
+      setOfficialRaces(data.races ?? []);
+    })
+    .catch(() => setOfficialRaces([]));
 }, []);
 
 useEffect(() => {
