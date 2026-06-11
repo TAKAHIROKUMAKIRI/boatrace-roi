@@ -81,23 +81,28 @@ async function getSingleRace(date: string, jcd: string, rno: string) {
   const venueName = VENUE_NAMES[jcd] ?? jcd;
 
   return {
-    raceId: `${date}-${jcd}-${rno}`,
-    date,
-    venueCode: jcd,
-    venueName,
-    raceNo: Number(rno),
-    race: `${venueName} ${rno}R`,
-    result: result.result,
-    payout: result.payout,
-    sourceUrls: {
-      beforeInfo: beforeInfoUrl,
-      result: resultUrl,
-    },
-    debug: {
-      beforeInfoTextPreview: beforeInfo.text.slice(0, 1200),
-      resultTextPreview: resultPage.text.slice(0, 1200),
-    },
-  };
+  raceId: `${date}-${jcd}-${rno}`,
+  date,
+  venueCode: jcd,
+  venueName,
+  raceNo: Number(rno),
+  race: `${venueName} ${rno}R`,
+
+  result: result.result,
+  payout: result.payout,
+
+  debugSnippet: result.debugSnippet,
+
+  sourceUrls: {
+    beforeInfo: beforeInfoUrl,
+    result: resultUrl,
+  },
+
+  debug: {
+    beforeInfoTextPreview: beforeInfo.text.slice(0, 1200),
+    resultTextPreview: resultPage.text.slice(0, 1200),
+  },
+};
 }
 
 export async function GET(request: NextRequest) {
