@@ -103,27 +103,9 @@ function extractResult(text: string) {
 }
 
 function extractOdds2t(text: string) {
-  const normalized = text
-    .replace(/&yen;/g, "¥")
-    .replace(/\s+/g, " ");
-
-  const odds: Record<string, number> = {};
-
-  const pattern = /(\d)-(\d)\s+(\d+\.\d+)/g;
-
-  let match;
-
-  while ((match = pattern.exec(normalized)) !== null) {
-    const first = match[1];
-    const second = match[2];
-    const value = Number(match[3]);
-
-    if (first !== second && value > 0) {
-      odds[`${first}-${second}`] = value;
-    }
-  }
-
-  return odds;
+  return {
+    raw: text.slice(0, 3000),
+  };
 }
 
 async function getSingleRace(date: string, jcd: string, rno: string) {
