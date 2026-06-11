@@ -158,7 +158,12 @@ const odds = extractOdds2t(oddsPage.text);
   debug: {
     beforeInfoTextPreview: beforeInfo.text.slice(0, 3000),
     resultTextPreview: resultPage.text.slice(0, 1200),
-    oddsHtmlPreview: oddsPage.html.slice(0, 5000),
+    oddsHtmlPreview: (() => {
+  const index = oddsPage.html.indexOf("2連単オッズ");
+  return index >= 0
+    ? oddsPage.html.slice(index, index + 8000)
+    : oddsPage.html.slice(0, 8000);
+})(),
   },
 };
 }
