@@ -103,8 +103,19 @@ function extractResult(text: string) {
 }
 
 function extractOdds2t(text: string) {
+  const normalized = text
+    .replace(/&yen;/g, "¥")
+    .replace(/\s+/g, " ");
+
+  const index = normalized.indexOf("2連単オッズ");
+
+  const snippet =
+    index >= 0
+      ? normalized.substring(index, index + 3000)
+      : normalized.substring(0, 3000);
+
   return {
-    raw: text.slice(0, 3000),
+    raw: snippet,
   };
 }
 
