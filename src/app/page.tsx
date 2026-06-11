@@ -10,9 +10,12 @@ type Race = {
   venueName: string;
   raceNo: number;
   race: string;
+
   result: string;
   payout: number;
+
   odds: Record<string, number>;
+
   racers: Racer[];
 };
 
@@ -42,7 +45,8 @@ export default function Home() {
   const [minOdds, setMinOdds] = useState(4);
   const [maxOdds, setMaxOdds] = useState(50);
   const [races, setRaces] = useState<Race[]>([]);
-  const [officialRaces, setOfficialRaces] = useState<OfficialRace[]>([]);
+  const [officialRaces, setOfficialRaces] =
+  useState<Race[]>([]);
   const stake = 1000;
 
   const yen = (value: number) => `¥${value.toLocaleString()}`;
@@ -51,9 +55,15 @@ export default function Home() {
   fetch("/api/boatrace?mode=backtest&date=20260609&jcd=07")
     .then((res) => res.json())
     .then((data) => {
-      setOfficialRaces(data.races ?? []);
+      const races = data.races ?? [];
+
+      setOfficialRaces(races);
+      setRaces(races);
     })
-    .catch(() => setOfficialRaces([]));
+    .catch(() => {
+      setOfficialRaces([]);
+      setRaces([]);
+    });
 }, []);
 
 useEffect(() => {
