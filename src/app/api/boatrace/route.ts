@@ -56,17 +56,32 @@ async function fetchText(url: string) {
 }
 
 function extractResult(text: string) {
-  const normalized = text.replace(/\s+/g, " ");
+  const normalized = text
+    .replace(/&yen;/g, "¥")
+    .replace(/\s+/g, " ");
 
-  const index = normalized.indexOf("2連単");
+  const payoutMatch = normalized.match(
+    /2連単\s+(\d)\s*-\s*(\d)\s*¥\s*([\d,]+)/
+  );
+
+  if (!payoutMatch) {
+    return {
+      result: null,
+      payout: null,
+      debugSnippet:
+        normalized.indexOf("2連単") >= 0
+          ? normalized.substring(
+              normalized.indexOf("2連単"),
+              normalized.indexOf("2連単") + 200
+            )
+          : "2連単 not found",
+    };
+  }
 
   return {
-    result: null,
-    payout: null,
-    debugSnippet:
-      index >= 0
-        ? normalized.substring(index, index + 200)
-        : "2連単 not found",
+    result: `${payoutMatch[1]}-${payoutMatch[2]}`,
+    payout: Number(payoutMatch[3].replace(/,/g, "")),
+    debugSnippet: "matched",
   };
 }
 
