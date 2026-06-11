@@ -70,26 +70,6 @@ function extractResult(text: string) {
   };
 }
 
-function extractResult(text: string) {
-  const normalized = text.replace(/\s+/g, " ");
-
-  const payoutMatch = normalized.match(
-    /2連単\s+(\d)\s+(\d)\s+(\d[\d,]*)/
-  );
-
-  if (!payoutMatch) {
-    return {
-      result: null,
-      payout: null,
-    };
-  }
-
-  return {
-    result: `${payoutMatch[1]}-${payoutMatch[2]}`,
-    payout: Number(payoutMatch[3].replace(/,/g, "")),
-  };
-}
-
 async function getSingleRace(date: string, jcd: string, rno: string) {
   const beforeInfoUrl = `https://www.boatrace.jp/owpc/pc/race/beforeinfo?rno=${rno}&jcd=${jcd}&hd=${date}`;
   const resultUrl = `https://www.boatrace.jp/owpc/pc/race/raceresult?rno=${rno}&jcd=${jcd}&hd=${date}`;
