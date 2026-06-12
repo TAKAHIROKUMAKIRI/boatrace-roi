@@ -88,6 +88,7 @@ export default function Home() {
       }
     }
 
+    console.log(allBets.slice(0, 20));
     const filteredBets = allBets.filter(
       (b) => b.ev >= evThreshold && b.odds >= minOdds && b.odds <= maxOdds
     );
