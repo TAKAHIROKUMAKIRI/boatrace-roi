@@ -124,7 +124,8 @@ function extractOdds2t(html: string) {
     ),
   ];
 
-  console.log(matches);
+  console.log("MATCHES", matches.length);
+console.log(matches);
   
   for (const match of matches) {
     const first = match[1];
