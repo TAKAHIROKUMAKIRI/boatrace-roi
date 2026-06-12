@@ -104,7 +104,10 @@ function extractResult(text: string) {
 }
 
 function extractOdds2t(html: string) {
+  console.log("ODDS HTML START");
   console.log(html.slice(0, 5000));
+  console.log("ODDS HTML END");
+
   const odds: Record<string, number> = {};
 
   const start = html.indexOf("2連単オッズ");
