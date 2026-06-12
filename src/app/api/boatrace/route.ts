@@ -104,36 +104,33 @@ function extractResult(text: string) {
 }
 
 function extractOdds2t(html: string) {
-  console.log("ODDS HTML START");
-  console.log(html.slice(0, 5000));
-  console.log("ODDS HTML END");
-
   const odds: Record<string, number> = {};
 
   const start = html.indexOf("2連単オッズ");
   const end = html.indexOf("2連複オッズ");
 
   const target =
-    start >= 0 && end > start
-      ? html.slice(start, end)
-      : html;
+    start >= 0 && end > start ? html.slice(start, end) : html;
 
-  const matches = [
-    ...target.matchAll(
-      /is-boatColor(\d)[\s\S]*?>(\d)<\/td>[\s\S]*?<td class="oddsPoint[^"]*">([\d.]+)<\/td>/g
-    ),
-  ];
+  const rows = [...target.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)];
 
-  console.log("MATCHES", matches.length);
-console.log(matches);
-  
-  for (const match of matches) {
-    const first = match[1];
-    const second = match[2];
-    const value = Number(match[3]);
+  for (const row of rows) {
+    const cells = [
+      ...row[1].matchAll(
+        /<td[^>]*is-boatColor(\d)[^>]*>\s*(\d)\s*<\/td>\s*<td[^>]*oddsPoint[^>]*>\s*([\d.]+)\s*<\/td>/g
+      ),
+    ];
 
-    if (first !== second && value > 0) {
-      odds[`${first}-${second}`] = value;
+    if (cells.length === 0) continue;
+
+    for (let i = 0; i < cells.length; i++) {
+      const first = i + 1;
+      const second = Number(cells[i][2]);
+      const value = Number(cells[i][3]);
+
+      if (first !== second && value > 0) {
+        odds[`${first}-${second}`] = value;
+      }
     }
   }
 
