@@ -128,29 +128,21 @@ function extractOdds2t(html: string) {
 function extractRacers(text: string) {
   const normalized = text.replace(/\s+/g, " ");
 
-  const racers = [];
+  const matches = [
+    ...normalized.matchAll(
+      /(\d)\s+([^\s]+)\s+([^\s]+)\s+(\d+\.\d)kg/g
+    ),
+  ];
 
-  const pattern =
-    /(\d)\s+([^\s]+)\s+([^\s]+)\s+(\d+\.\d)kg\s+([\d.]+)\s+([\d.]+)\s+(-?[\d.]+)/g;
-
-  let match;
-
-  while ((match = pattern.exec(normalized)) !== null) {
-    racers.push({
-      lane: Number(match[1]),
-      racerName: `${match[2]} ${match[3]}`,
-      weight: Number(match[4]),
-      winRate: Number(match[5]),
-      localWinRate: Number(match[6]),
-      averageStart: Math.abs(Number(match[7])),
-      motorNo: 0,
-      motorRate: 0,
-      boatNo: 0,
-      boatRate: 0,
-    });
-  }
-
-  return racers;
+  return {
+    count: matches.length,
+    preview: matches.slice(0, 10).map((m) => ({
+      lane: m[1],
+      lastName: m[2],
+      firstName: m[3],
+      weight: m[4],
+    })),
+  };
 }
 
 async function getSingleRace(date: string, jcd: string, rno: string) {
