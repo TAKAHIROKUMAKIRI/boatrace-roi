@@ -125,6 +125,34 @@ function extractOdds2t(html: string) {
   return odds;
 }
 
+function extractRacers(text: string) {
+  const normalized = text.replace(/\s+/g, " ");
+
+  const racers = [];
+
+  const pattern =
+    /(\d)\s+([^\s]+)\s+([^\s]+)\s+(\d+\.\d)kg\s+([\d.]+)\s+([\d.]+)\s+(-?[\d.]+)/g;
+
+  let match;
+
+  while ((match = pattern.exec(normalized)) !== null) {
+    racers.push({
+      lane: Number(match[1]),
+      racerName: `${match[2]} ${match[3]}`,
+      weight: Number(match[4]),
+      winRate: Number(match[5]),
+      localWinRate: Number(match[6]),
+      averageStart: Math.abs(Number(match[7])),
+      motorNo: 0,
+      motorRate: 0,
+      boatNo: 0,
+      boatRate: 0,
+    });
+  }
+
+  return racers;
+}
+
 async function getSingleRace(date: string, jcd: string, rno: string) {
   const beforeInfoUrl = `https://www.boatrace.jp/owpc/pc/race/beforeinfo?rno=${rno}&jcd=${jcd}&hd=${date}`;
   const resultUrl = `https://www.boatrace.jp/owpc/pc/race/raceresult?rno=${rno}&jcd=${jcd}&hd=${date}`;
@@ -136,6 +164,7 @@ const oddsPage = await fetchText(oddsUrl);
 
 const result = extractResult(resultPage.text);
 const odds = extractOdds2t(oddsPage.html);
+  const racers = extractRacers(beforeInfo.text);
 
   const venueName = VENUE_NAMES[jcd] ?? jcd;
 
@@ -150,6 +179,7 @@ const odds = extractOdds2t(oddsPage.html);
   result: result.result,
   payout: result.payout,
   odds,
+    racers,
 
   debugSnippet: result.debugSnippet,
   debugOddsPreview: oddsPage.text.slice(0, 1500),
