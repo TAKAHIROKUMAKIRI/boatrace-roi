@@ -54,22 +54,25 @@ export default function Home() {
   fetch("/api/boatrace?mode=backtest&date=20260609&jcd=07")
     .then((res) => res.json())
     .then((data) => {
-      const races = data.races ?? [];
+      const official = data.races ?? [];
 
-      setOfficialRaces(races);
-      setRaces(races);
+      setOfficialRaces(official);
+
+      const usableRaces = official.filter(
+        (race: Race) =>
+          race.racers &&
+          race.racers.length === 6 &&
+          race.odds &&
+          Object.keys(race.odds).length > 0 &&
+          race.result
+      );
+
+      setRaces(usableRaces);
     })
     .catch(() => {
       setOfficialRaces([]);
       setRaces([]);
     });
-}, []);
-
-useEffect(() => {
-  fetch("/api/boatrace?mode=backtest&date=20260609&jcd=07")
-    .then((res) => res.json())
-    .then((data) => setOfficialRaces(data.races ?? []))
-    .catch(() => setOfficialRaces([]));
 }, []);
 
   const result = useMemo(() => {
