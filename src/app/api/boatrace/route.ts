@@ -134,16 +134,21 @@ function extractRacers(text: string) {
     ),
   ];
 
-  return {
-    count: matches.length,
-    preview: matches.slice(0, 10).map((m) => ({
-      lane: m[1],
-      lastName: m[2],
-      firstName: m[3],
-      weight: m[4],
-    })),
-  };
-}
+  return matches.map((m) => ({
+  lane: Number(m[1]),
+  racerName: `${m[2]} ${m[3]}`,
+  weight: Number(m[4]),
+
+  winRate: 0,
+  localWinRate: 0,
+  averageStart: 0,
+
+  motorNo: 0,
+  motorRate: 0,
+
+  boatNo: 0,
+  boatRate: 0,
+}));
 
 async function getSingleRace(date: string, jcd: string, rno: string) {
   const beforeInfoUrl = `https://www.boatrace.jp/owpc/pc/race/beforeinfo?rno=${rno}&jcd=${jcd}&hd=${date}`;
@@ -170,16 +175,22 @@ const odds = extractOdds2t(oddsPage.html);
 
   result: result.result,
   payout: result.payout,
+
   odds,
-    racers,
+
+  racers, 
 
   debugSnippet: result.debugSnippet,
-  debugOddsPreview: oddsPage.text.slice(0, 1500),
 
   sourceUrls: {
     beforeInfo: beforeInfoUrl,
     result: resultUrl,
     odds: oddsUrl,
+  },
+
+  debug: {
+    beforeInfoTextPreview: beforeInfo.text.slice(0, 1200),
+    resultTextPreview: resultPage.text.slice(0, 1200),
   },
 
   debug: {
