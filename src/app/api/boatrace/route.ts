@@ -106,8 +106,16 @@ function extractResult(text: string) {
 function extractOdds2t(html: string) {
   const odds: Record<string, number> = {};
 
+  const start = html.indexOf("2連単オッズ");
+  const end = html.indexOf("2連複オッズ");
+
+  const target =
+    start >= 0 && end > start
+      ? html.slice(start, end)
+      : html;
+
   const matches = [
-    ...html.matchAll(
+    ...target.matchAll(
       /is-boatColor(\d)[\s\S]*?>(\d)<\/td>[\s\S]*?<td class="oddsPoint[^"]*">([\d.]+)<\/td>/g
     ),
   ];
