@@ -106,11 +106,18 @@ function extractResult(text: string) {
 function extractOdds2t(html: string) {
   const odds: Record<string, number> = {};
 
+  const normalized = html
+    .replace(/\\n/g, " ")
+    .replace(/\\t/g, " ")
+    .replace(/\s+/g, " ");
+
   const matches = [
-    ...html.matchAll(
-      /is-boatColor(\d)[^>]*>(\d)<\/td>\s*<td class="oddsPoint[^"]*">([\d.]+)<\/td>/g
+    ...normalized.matchAll(
+      /is-boatColor(\d).*?>(\d)<\/td>.*?oddsPoint.*?>([\d.]+)<\/td>/g
     ),
   ];
+
+  console.log("ODDS MATCHES", matches.length);
 
   for (const match of matches) {
     const first = match[1];
