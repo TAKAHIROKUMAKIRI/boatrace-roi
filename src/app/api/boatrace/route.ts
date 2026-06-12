@@ -190,11 +190,6 @@ const odds = extractOdds2t(oddsPage.html);
   },
 
   debug: {
-    beforeInfoTextPreview: beforeInfo.text.slice(0, 1200),
-    resultTextPreview: resultPage.text.slice(0, 1200),
-  },
-
-  debug: {
     beforeInfoTextPreview: beforeInfo.text.slice(0, 3000),
     resultTextPreview: resultPage.text.slice(0, 1200),
     oddsHtmlPreview: (() => {
