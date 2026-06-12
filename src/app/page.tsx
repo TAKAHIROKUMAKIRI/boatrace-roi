@@ -70,9 +70,13 @@ export default function Home() {
 
   for (const race of races) {
 
+    console.log(race.race, race.odds);
     console.log(
   race.race,
+  Object.keys(race.odds).length,
   race.odds
+);
+    
 );
 
     const predictions = predictExacta(race.racers);
