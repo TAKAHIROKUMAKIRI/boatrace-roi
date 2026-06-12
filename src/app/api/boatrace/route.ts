@@ -139,10 +139,9 @@ function extractRacers(text: string) {
   racerName: `${m[2]} ${m[3]}`,
 
   weight: Number(m[4]),
-
   winRate: Number(m[5]),
-  localWinRate: Number(m[6]),
 
+  localWinRate: 0,
   averageStart: 0,
 
   motorNo: 0,
