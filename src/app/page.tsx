@@ -66,10 +66,17 @@ export default function Home() {
 }, []);
 
   const result = useMemo(() => {
-    const allBets: BetResult[] = [];
+  const allBets: BetResult[] = [];
 
-    for (const race of races) {
-      const predictions = predictExacta(race.racers);
+  for (const race of races) {
+
+    console.log(
+      race.race,
+      Object.keys(race.odds).length,
+      race.odds
+    );
+
+    const predictions = predictExacta(race.racers);
 
       for (const prediction of predictions) {
         const odds = race.odds?.[prediction.bet] ?? 10;
