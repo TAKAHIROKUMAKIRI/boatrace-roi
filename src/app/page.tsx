@@ -54,21 +54,15 @@ export default function Home() {
   fetch("/api/boatrace?mode=backtest&date=20260609&jcd=07")
     .then((res) => res.json())
     .then((data) => {
-      const official = data.races ?? [];
+  console.log(data);
 
-      setOfficialRaces(official);
+  const official = data.races ?? [];
 
-      const usableRaces = official.filter(
-        (race: Race) =>
-          race.racers &&
-          race.racers.length === 6 &&
-          race.odds &&
-          Object.keys(race.odds).length > 0 &&
-          race.result
-      );
+  console.log("official count", official.length);
 
-      setRaces(usableRaces);
-    })
+  setOfficialRaces(official);
+  setRaces(official);
+})
     .catch(() => {
       setOfficialRaces([]);
       setRaces([]);
