@@ -193,7 +193,12 @@ const odds = extractOdds2t(oddsPage.html);
 
   debug: {
     beforeInfoTextPreview: beforeInfo.text.slice(0, 3000),
-    beforeInfoHtmlPreview: beforeInfo.html.slice(0, 10000),
+    beforeInfoHtmlPreview: (() => {
+  const index = beforeInfo.html.indexOf("体重");
+  return index >= 0
+    ? beforeInfo.html.slice(index, index + 12000)
+    : beforeInfo.html.slice(0, 12000);
+})(),
     resultTextPreview: resultPage.text.slice(0, 1200),
     oddsHtmlPreview: (() => {
   const index = oddsPage.html.indexOf("2連単オッズ");
