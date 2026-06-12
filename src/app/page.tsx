@@ -77,7 +77,6 @@ export default function Home() {
   race.odds
 );
     
-);
 
     const predictions = predictExacta(race.racers);
 
