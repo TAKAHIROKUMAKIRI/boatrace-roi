@@ -54,11 +54,7 @@ export default function Home() {
   fetch("/api/boatrace?mode=backtest&date=20260609&jcd=07")
     .then((res) => res.json())
     .then((data) => {
-  console.log(data);
-
   const official = data.races ?? [];
-
-  console.log("official count", official.length);
 
   setOfficialRaces(official);
   setRaces(official);
