@@ -168,7 +168,13 @@ async function getSingleRace(date: string, jcd: string, rno: string) {
   const beforeInfo = await fetchText(beforeInfoUrl);
 const resultPage = await fetchText(resultUrl);
 const oddsPage = await fetchText(oddsUrl);
-
+console.log(
+  oddsPage.text.slice(
+    oddsPage.text.indexOf("2連単オッズ"),
+    oddsPage.text.indexOf("2連複オッズ")
+  )
+);
+  
 const result = extractResult(resultPage.text);
 const odds = extractOdds2t(oddsPage.html);
   const racers = extractRacers(beforeInfo.text);
