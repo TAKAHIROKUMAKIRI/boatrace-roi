@@ -193,6 +193,7 @@ const odds = extractOdds2t(oddsPage.html);
 
   debug: {
     beforeInfoTextPreview: beforeInfo.text.slice(0, 3000),
+    beforeInfoHtmlPreview: beforeInfo.html.slice(0, 10000),
     resultTextPreview: resultPage.text.slice(0, 1200),
     oddsHtmlPreview: (() => {
   const index = oddsPage.html.indexOf("2連単オッズ");
