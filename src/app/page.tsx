@@ -43,6 +43,10 @@ export default function Home() {
   const [evThreshold, setEvThreshold] = useState(1.15);
   const [minOdds, setMinOdds] = useState(4);
   const [maxOdds, setMaxOdds] = useState(50);
+
+  const [startDate, setStartDate] = useState("2026-06-09");
+const [endDate, setEndDate] = useState("2026-06-09");
+  
   const [races, setRaces] = useState<Race[]>([]);
   const [officialRaces, setOfficialRaces] =
   useState<Race[]>([]);
