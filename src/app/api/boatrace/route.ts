@@ -112,25 +112,25 @@ function extractOdds2t(html: string) {
   const target =
     start >= 0 && end > start ? html.slice(start, end) : html;
 
-  const rows = [...target.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)];
+  const matches = [
+    ...target.matchAll(
+      /<td[^>]*class="[^"]*is-boatColor(\d)[^"]*"[^>]*>\s*(\d)\s*<\/td>\s*<td[^>]*class="[^"]*oddsPoint[^"]*"[^>]*>\s*([\d.]+)\s*<\/td>/g
+    ),
+  ];
 
-  for (const row of rows) {
-    const cells = [
-      ...row[1].matchAll(
-        /<td[^>]*is-boatColor(\d)[^>]*>\s*(\d)\s*<\/td>\s*<td[^>]*oddsPoint[^>]*>\s*([\d.]+)\s*<\/td>/g
-      ),
-    ];
+  const firstBoats = [1, 2, 3, 4, 5, 6];
+  let index = 0;
 
-    if (cells.length === 0) continue;
+  for (const first of firstBoats) {
+    for (const second of firstBoats) {
+      if (first === second) continue;
 
-    for (let i = 0; i < cells.length; i++) {
-      const first = i + 1;
-      const second = Number(cells[i][2]);
-      const value = Number(cells[i][3]);
-
-      if (first !== second && value > 0) {
-        odds[`${first}-${second}`] = value;
+      const match = matches[index];
+      if (match) {
+        odds[`${first}-${second}`] = Number(match[3]);
       }
+
+      index++;
     }
   }
 
