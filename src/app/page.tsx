@@ -242,6 +242,41 @@ console.log(
               flexWrap: "wrap",
             }}
           >
+
+            <label style={{ fontWeight: 600 }}>
+  開始日
+  <br />
+  <input
+    type="date"
+    value={startDate}
+    onChange={(e) => setStartDate(e.target.value)}
+    style={{
+      marginTop: "6px",
+      padding: "10px",
+      width: "150px",
+      borderRadius: "8px",
+      border: "1px solid #d1d5db",
+    }}
+  />
+</label>
+
+<label style={{ fontWeight: 600 }}>
+  終了日
+  <br />
+  <input
+    type="date"
+    value={endDate}
+    onChange={(e) => setEndDate(e.target.value)}
+    style={{
+      marginTop: "6px",
+      padding: "10px",
+      width: "150px",
+      borderRadius: "8px",
+      border: "1px solid #d1d5db",
+    }}
+  />
+</label>
+            
             {[
               ["EV閾値", evThreshold, setEvThreshold, 0.05],
               ["最低オッズ", minOdds, setMinOdds, 0.1],
