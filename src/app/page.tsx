@@ -98,6 +98,16 @@ export default function Home() {
     }
 
     console.log(allBets.slice(0, 20));
+
+    console.log("MAX EV", Math.max(...allBets.map((b) => b.ev)));
+
+console.log(
+  "TOP EV",
+  [...allBets]
+    .sort((a, b) => b.ev - a.ev)
+    .slice(0, 10)
+);
+    
     const filteredBets = allBets.filter(
       (b) => b.ev >= evThreshold && b.odds >= minOdds && b.odds <= maxOdds
     );
