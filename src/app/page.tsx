@@ -77,8 +77,19 @@ export default function Home() {
   race.odds
 );
     
-
+console.log(
+  race.race,
+  race.racers?.length,
+  race.racers
+);
+    
     const predictions = predictExacta(race.racers);
+
+console.log(
+  race.race,
+  "predictions",
+  predictions.length
+);
 
       for (const prediction of predictions) {
         const odds = race.odds?.[prediction.bet] ?? 10;
