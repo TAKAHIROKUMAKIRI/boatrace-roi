@@ -55,19 +55,21 @@ const [endDate, setEndDate] = useState("2026-06-09");
   const yen = (value: number) => `¥${value.toLocaleString()}`;
 
   useEffect(() => {
-  fetch("/api/boatrace?mode=backtest&date=20260609&jcd=07")
+  const date = startDate.replace(/-/g, "");
+
+  fetch(`/api/boatrace?mode=backtest&date=${date}&jcd=07`)
     .then((res) => res.json())
     .then((data) => {
-  const official = data.races ?? [];
+      const official = data.races ?? [];
 
-  setOfficialRaces(official);
-  setRaces(official);
-})
+      setOfficialRaces(official);
+      setRaces(official);
+    })
     .catch(() => {
       setOfficialRaces([]);
       setRaces([]);
     });
-}, []);
+}, [startDate]);
 
   const result = useMemo(() => {
   const allBets: BetResult[] = [];
