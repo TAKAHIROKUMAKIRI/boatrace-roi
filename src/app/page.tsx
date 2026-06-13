@@ -57,15 +57,19 @@ const [endDate, setEndDate] = useState("2026-06-09");
   useEffect(() => {
   const date = startDate.replace(/-/g, "");
 
+  setRaces([]);
+  setOfficialRaces([]);
+
   fetch(`/api/boatrace?mode=backtest&date=${date}&jcd=07`)
     .then((res) => res.json())
     .then((data) => {
-      const official = data.races ?? [];
+      const official = Array.isArray(data.races) ? data.races : [];
 
       setOfficialRaces(official);
       setRaces(official);
     })
-    .catch(() => {
+    .catch((error) => {
+      console.error(error);
       setOfficialRaces([]);
       setRaces([]);
     });
@@ -73,6 +77,22 @@ const [endDate, setEndDate] = useState("2026-06-09");
 
   const result = useMemo(() => {
   const allBets: BetResult[] = [];
+
+  if (!races || races.length === 0) {
+    return {
+      totalRaces: 0,
+      totalCandidates: 0,
+      bets: [],
+      skippedBets: [],
+      hitCount: 0,
+      hitRate: 0,
+      investment: 0,
+      payout: 0,
+      profit: 0,
+      roi: 0,
+      evComparisons: [],
+    };
+  }
 
   for (const race of races) {
 
