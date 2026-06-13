@@ -55,6 +55,8 @@ const [endDate, setEndDate] = useState("2026-06-09");
   const yen = (value: number) => `¥${value.toLocaleString()}`;
 
   useEffect(() => {
+  if (!startDate) return;
+
   const date = startDate.replace(/-/g, "");
 
   setRaces([]);
@@ -64,12 +66,10 @@ const [endDate, setEndDate] = useState("2026-06-09");
     .then((res) => res.json())
     .then((data) => {
       const official = Array.isArray(data.races) ? data.races : [];
-
       setOfficialRaces(official);
       setRaces(official);
     })
-    .catch((error) => {
-      console.error(error);
+    .catch(() => {
       setOfficialRaces([]);
       setRaces([]);
     });
