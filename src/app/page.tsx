@@ -108,6 +108,10 @@ console.log(
   race.racers?.length,
   race.racers
 );
+
+    if (!race.racers || race.racers.length !== 6 || !race.odds) {
+  continue;
+}
     
     const predictions = predictExacta(race.racers);
 
