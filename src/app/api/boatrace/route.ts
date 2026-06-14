@@ -188,6 +188,18 @@ const result = extractResult(resultPage.text);
 const odds = extractOdds2t(oddsPage.html);
   const racers = extractRacers(beforeInfo.text);
 
+  console.log(
+  "RACE DEBUG",
+  date,
+  rno,
+  "racers",
+  racers.length,
+  "odds",
+  Object.keys(odds).length,
+  "result",
+  result.result
+);
+  
   const venueName = VENUE_NAMES[jcd] ?? jcd;
 
   const isErrorPage =
