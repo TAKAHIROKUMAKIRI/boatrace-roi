@@ -480,7 +480,10 @@ console.log(
       </h3>
 
       <p>結果：{race.result}</p>
-      <p>2連単払戻：¥{race.payout.toLocaleString()}</p>
+      <p>
+  2連単払戻：
+  ¥{Number(race.payout ?? 0).toLocaleString()}
+</p>
 
       <table
         style={{
@@ -561,7 +564,9 @@ console.log(
           <Td>{race.raceNo}R</Td>
           <Td>{race.result ?? "-"}</Td>
           <Td>
-            {race.payout ? `¥${race.payout.toLocaleString()}` : "-"}
+            {race.payout != null
+  ? `¥${Number(race.payout).toLocaleString()}`
+  : "-"}
           </Td>
         </tr>
       ))}
