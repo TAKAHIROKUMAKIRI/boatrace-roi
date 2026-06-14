@@ -177,6 +177,15 @@ async function getSingleRace(date: string, jcd: string, rno: string) {
   const resultPage = await fetchText(resultUrl);
   const oddsPage = await fetchText(oddsUrl);
 
+  console.log(
+  "HTML SIZE",
+  date,
+  rno,
+  beforeInfo.html.length,
+  resultPage.html.length,
+  oddsPage.html.length
+);
+  
 console.log("ODDS URL", oddsUrl);
 
 console.log(
@@ -200,6 +209,13 @@ const odds = extractOdds2t(oddsPage.html);
   result.result
 );
 
+  console.log(
+  "URLS",
+  beforeInfoUrl,
+  resultUrl,
+  oddsUrl
+);
+  
   if (Object.keys(odds).length === 0) {
   console.log(
     "ODDS EMPTY",
