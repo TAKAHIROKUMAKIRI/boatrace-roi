@@ -192,7 +192,12 @@ console.log(
   "ODDS HTML",
   oddsPage.html.slice(0, 500)
 );
-    
+
+  console.log(
+  "RESULT HTML",
+  resultPage.text.slice(0, 500)
+);
+  
 const result = extractResult(resultPage.text);
 const odds = extractOdds2t(oddsPage.html);
   const racers = extractRacers(beforeInfo.text);
