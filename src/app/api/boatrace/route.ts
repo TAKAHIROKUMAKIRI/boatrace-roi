@@ -293,34 +293,42 @@ const odds = extractOdds2t(oddsPage.html);
 };
 }
 
-try {
-  if (mode === "backtest") {
-    const races = [];
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
 
-    for (const venueCode of Object.keys(VENUE_NAMES)) {
-      for (let raceNo = 1; raceNo <= 12; raceNo++) {
-        const race = await getSingleRace(date, venueCode, String(raceNo));
+  const mode = searchParams.get("mode") ?? "single";
+  const date = searchParams.get("date") ?? "20260609";
+  const jcd = searchParams.get("jcd") ?? "07";
+  const rno = searchParams.get("rno") ?? "1";
 
-        if (
-          race.racers.length === 6 &&
-          Object.keys(race.odds).length === 30 &&
-          race.result
-        ) {
-          races.push(race);
+  try {
+    if (mode === "backtest") {
+      const races = [];
+
+      for (const venueCode of Object.keys(VENUE_NAMES)) {
+        for (let raceNo = 1; raceNo <= 12; raceNo++) {
+          const race = await getSingleRace(date, venueCode, String(raceNo));
+
+          if (
+            race.racers.length === 6 &&
+            Object.keys(race.odds).length === 30 &&
+            race.result
+          ) {
+            races.push(race);
+          }
         }
       }
-    }
 
-    return NextResponse.json({
-      ok: true,
-      mode,
-      date,
-      venueCode: "ALL",
-      venueName: "全場",
-      count: races.length,
-      races,
-    });
-  }
+      return NextResponse.json({
+        ok: true,
+        mode,
+        date,
+        venueCode: "ALL",
+        venueName: "全場",
+        count: races.length,
+        races,
+      });
+    }
 
     const race = await getSingleRace(date, jcd, rno);
 
@@ -340,4 +348,3 @@ try {
     );
   }
 }
-// test deploy
