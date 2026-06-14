@@ -291,14 +291,10 @@ console.log(
   <input
     type="date"
     value={startDate}
-    onChange={(e) => setStartDate(e.target.value)}
-    style={{
-      marginTop: "6px",
-      padding: "10px",
-      width: "150px",
-      borderRadius: "8px",
-      border: "1px solid #d1d5db",
-    }}
+    onChange={(e) => {
+  console.log("CHANGE START", e.target.value);
+  setStartDate(e.target.value);
+}}
   />
 </label>
 
