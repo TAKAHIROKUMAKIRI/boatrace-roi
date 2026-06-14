@@ -187,6 +187,16 @@ const odds = extractOdds2t(oddsPage.html);
   beforeInfo.text.includes("見つかりませんでした") ||
   resultPage.text.includes("見つかりませんでした") ||
   oddsPage.text.includes("見つかりませんでした");
+
+  if (date === "20260608" && rno === "1") {
+  console.log("BEFORE ERROR", beforeInfo.text.includes("見つかりませんでした"));
+  console.log("RESULT ERROR", resultPage.text.includes("見つかりませんでした"));
+  console.log("ODDS ERROR", oddsPage.text.includes("見つかりませんでした"));
+
+  console.log("BEFORE LEN", beforeInfo.text.length);
+  console.log("RESULT LEN", resultPage.text.length);
+  console.log("ODDS LEN", oddsPage.text.length);
+}
   
   return {
   raceId: `${date}-${jcd}-${rno}`,
