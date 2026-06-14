@@ -176,6 +176,13 @@ async function getSingleRace(date: string, jcd: string, rno: string) {
   const beforeInfo = await fetchText(beforeInfoUrl);
   const resultPage = await fetchText(resultUrl);
   const oddsPage = await fetchText(oddsUrl);
+
+console.log("ODDS URL", oddsUrl);
+
+console.log(
+  "ODDS HTML",
+  oddsPage.html.slice(0, 500)
+);
     
 const result = extractResult(resultPage.text);
 const odds = extractOdds2t(oddsPage.html);
