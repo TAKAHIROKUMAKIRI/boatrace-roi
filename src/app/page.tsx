@@ -96,25 +96,22 @@ const [endDate, setEndDate] = useState("2026-06-09");
   }
 
   for (const race of races) {
+  console.log(
+    race.race,
+    "racers",
+    race.racers?.length,
+    "odds",
+    Object.keys(race.odds || {}).length,
+    "result",
+    race.result
+  );
 
-    console.log(race.race, race.odds);
-    console.log(
-  race.race,
-  Object.keys(race.odds).length,
-  race.odds
-);
-    
-console.log(
-  race.race,
-  race.racers?.length,
-  race.racers
-);
+  if (!race.racers || race.racers.length !== 6 || !race.odds) {
+    console.log("SKIP", race.race);
+    continue;
+  }
 
-    if (!race.racers || race.racers.length !== 6 || !race.odds) {
-  continue;
-}
-    
-    const predictions = predictExacta(race.racers);
+  const predictions = predictExacta(race.racers);
 
 console.log(
   race.race,
