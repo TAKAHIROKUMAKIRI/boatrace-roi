@@ -243,6 +243,8 @@ const odds = extractOdds2t(oddsPage.html);
 }
 
 export async function GET(request: NextRequest) {
+  console.log("API START");
+
   const { searchParams } = new URL(request.url);
 
   const mode = searchParams.get("mode") ?? "single";
@@ -250,6 +252,13 @@ export async function GET(request: NextRequest) {
   const jcd = searchParams.get("jcd") ?? "07";
   const rno = searchParams.get("rno") ?? "1";
 
+  console.log("PARAMS", {
+  mode,
+  date,
+  jcd,
+  rno,
+});
+  
   try {
     if (mode === "backtest") {
       const races = [];
