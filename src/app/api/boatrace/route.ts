@@ -326,8 +326,8 @@ try {
         ok: true,
         mode,
         date,
-        venueCode: jcd,
-        venueName: VENUE_NAMES[jcd] ?? jcd,
+        venueCode: "ALL",
+venueName: "全場",
         count: races.length,
         races,
       });
