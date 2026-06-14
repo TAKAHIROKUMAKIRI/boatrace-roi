@@ -169,9 +169,13 @@ async function getSingleRace(date: string, jcd: string, rno: string) {
   const resultUrl = `https://www.boatrace.jp/owpc/pc/race/raceresult?rno=${rno}&jcd=${jcd}&hd=${date}`;
   const oddsUrl = `https://www.boatrace.jp/owpc/pc/race/odds2tf?rno=${rno}&jcd=${jcd}&hd=${date}`;
 
+  console.log("BEFORE URL", beforeInfoUrl);
+  console.log("RESULT URL", resultUrl);
+  console.log("ODDS URL", oddsUrl);
+
   const beforeInfo = await fetchText(beforeInfoUrl);
-const resultPage = await fetchText(resultUrl);
-const oddsPage = await fetchText(oddsUrl);
+  const resultPage = await fetchText(resultUrl);
+  const oddsPage = await fetchText(oddsUrl);
     
 const result = extractResult(resultPage.text);
 const odds = extractOdds2t(oddsPage.html);
