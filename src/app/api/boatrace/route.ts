@@ -27,6 +27,8 @@ const VENUE_NAMES: Record<string, string> = {
   "24": "大村",
 };
 
+const VENUE_CODES = Object.keys(VENUE_NAMES);
+
 function htmlToText(html: string) {
   return html
     .replace(/<script[\s\S]*?<\/script>/gi, "")
@@ -291,31 +293,34 @@ const odds = extractOdds2t(oddsPage.html);
 };
 }
 
-export async function GET(request: NextRequest) {
-  console.log("API START");
+try {
+  if (mode === "backtest") {
+    const races = [];
 
-  const { searchParams } = new URL(request.url);
-
-  const mode = searchParams.get("mode") ?? "single";
-  const date = searchParams.get("date") ?? "20260609";
-  const jcd = searchParams.get("jcd") ?? "07";
-  const rno = searchParams.get("rno") ?? "1";
-
-  console.log("PARAMS", {
-  mode,
-  date,
-  jcd,
-  rno,
-});
-  
-  try {
-    if (mode === "backtest") {
-      const races = [];
-
+    for (const venueCode of Object.keys(VENUE_NAMES)) {
       for (let raceNo = 1; raceNo <= 12; raceNo++) {
-        const race = await getSingleRace(date, jcd, String(raceNo));
-        races.push(race);
+        const race = await getSingleRace(date, venueCode, String(raceNo));
+
+        if (
+          race.racers.length === 6 &&
+          Object.keys(race.odds).length === 30 &&
+          race.result
+        ) {
+          races.push(race);
+        }
       }
+    }
+
+    return NextResponse.json({
+      ok: true,
+      mode,
+      date,
+      venueCode: "ALL",
+      venueName: "全場",
+      count: races.length,
+      races,
+    });
+  }
 
       return NextResponse.json({
         ok: true,
