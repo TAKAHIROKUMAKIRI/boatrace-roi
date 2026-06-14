@@ -199,6 +199,15 @@ const odds = extractOdds2t(oddsPage.html);
   "result",
   result.result
 );
+
+  if (Object.keys(odds).length === 0) {
+  console.log(
+    "ODDS EMPTY",
+    date,
+    rno,
+    oddsPage.html.slice(0, 1000)
+  );
+}
   
   const venueName = VENUE_NAMES[jcd] ?? jcd;
 
