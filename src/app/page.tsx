@@ -60,8 +60,8 @@ const [endDate, setEndDate] = useState("2026-06-09");
 
   const date = startDate.replace(/-/g, "");
 
-  setRaces([]);
-  setOfficialRaces([]);
+  console.log("START DATE", startDate);
+  console.log("FETCH DATE", date);
 
   fetch(`/api/boatrace?mode=backtest&date=${date}&jcd=07`)
     .then((res) => res.json())
