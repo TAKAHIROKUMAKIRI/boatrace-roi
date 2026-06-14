@@ -52,7 +52,8 @@ const [endDate, setEndDate] = useState("2026-06-09");
   useState<Race[]>([]);
   const stake = 1000;
 
-  const yen = (value: number) => `¥${value.toLocaleString()}`;
+  const yen = (value: number | null | undefined) =>
+  `¥${(value ?? 0).toLocaleString()}`;
 
   useEffect(() => {
   if (!startDate) return;
