@@ -135,11 +135,29 @@ console.log(
         });
       }
     }
+
+    console.log("ALL BETS", allBets.length);
+
+console.log(
+  "TOP 20 EV",
+  [...allBets]
+    .sort((a, b) => b.ev - a.ev)
+    .slice(0, 20)
+    .map((b) => ({
+      race: b.race,
+      bet: b.bet,
+      ev: b.ev,
+      odds: b.odds,
+      prob: b.probability,
+    }))
+);
     
     const filteredBets = allBets.filter(
       (b) => b.ev >= evThreshold && b.odds >= minOdds && b.odds <= maxOdds
     );
 
+    console.log("FILTERED", filteredBets.length);
+    
     const raceGroups = filteredBets.reduce<Record<string, BetResult[]>>(
       (groups, bet) => {
         if (!groups[bet.race]) groups[bet.race] = [];
