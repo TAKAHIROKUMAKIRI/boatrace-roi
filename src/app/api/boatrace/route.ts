@@ -322,17 +322,6 @@ try {
     });
   }
 
-      return NextResponse.json({
-        ok: true,
-        mode,
-        date,
-        venueCode: "ALL",
-venueName: "全場",
-        count: races.length,
-        races,
-      });
-    }
-
     const race = await getSingleRace(date, jcd, rno);
 
     return NextResponse.json({
