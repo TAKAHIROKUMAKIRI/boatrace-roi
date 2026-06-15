@@ -320,7 +320,9 @@ export async function GET(request: NextRequest) {
     if (mode === "backtest") {
       const races = [];
 
-      for (const venueCode of Object.keys(VENUE_NAMES)) {
+      const targetVenues = ["07", "10", "11", "13", "15", "16", "18", "21", "24"];
+
+for (const venueCode of targetVenues) {
         for (let raceNo = 1; raceNo <= 12; raceNo++) {
           const race = await getSingleRace(date, venueCode, String(raceNo));
 
