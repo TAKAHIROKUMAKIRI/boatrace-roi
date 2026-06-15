@@ -87,7 +87,7 @@ if (data.races?.length > 0) {
       setOfficialRaces([]);
       setRaces([]);
     });
-}, [startDate]);
+}, [startDate, endDate]);
 
   const result = useMemo(() => {
   const allBets: BetResult[] = [];
