@@ -68,7 +68,10 @@ const [endDate, setEndDate] = useState("2026-06-09");
   fetch(`/api/boatrace?mode=backtest&date=${date}`)
     .then((res) => res.json())
     .then((data) => {
-      console.log("API RESPONSE", data);
+      console.log(
+  "API RESPONSE",
+  JSON.stringify(data, null, 2)
+);
       console.log("RACES COUNT", data.races?.length);
 
       const official = Array.isArray(data.races) ? data.races : [];
