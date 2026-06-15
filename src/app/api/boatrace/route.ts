@@ -59,6 +59,11 @@ async function fetchText(url: string) {
 }
 
 function extractResult(text: string) {
+console.log(
+  "RESULT INPUT",
+  text.slice(0, 1000)
+);
+  
   const normalized = text
     .replace(/&yen;/g, "¥")
     .replace(/\s+/g, " ");
@@ -106,6 +111,11 @@ function extractResult(text: string) {
 }
 
 function extractOdds2t(html: string) {
+console.log(
+  "ODDS INPUT",
+  html.slice(0, 1000)
+);
+  
   const odds: Record<string, number> = {};
 
   const start = html.indexOf("2連単オッズ");
@@ -140,6 +150,11 @@ function extractOdds2t(html: string) {
 }
 
 function extractRacers(text: string) {
+console.log(
+  "RACERS INPUT",
+  text.slice(0, 1000)
+);
+  
   const normalized = text.replace(/\s+/g, " ");
 
   const matches = [
@@ -204,6 +219,15 @@ const result = extractResult(resultPage.text);
 const odds = extractOdds2t(oddsPage.html);
   const racers = extractRacers(beforeInfo.text);
 
+  console.log(
+  "PARSE CHECK",
+  date,
+  rno,
+  beforeInfo.text.slice(0, 300),
+  oddsPage.text.slice(0, 300),
+  resultPage.text.slice(0, 300)
+);
+  
   console.log(
   "RACE DEBUG",
   date,
