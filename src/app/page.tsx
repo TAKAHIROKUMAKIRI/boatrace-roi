@@ -60,17 +60,24 @@ const [endDate, setEndDate] = useState("2026-06-09");
 
   const date = startDate.replace(/-/g, "");
 
+  console.log("FETCH START", date);
+
   setRaces([]);
   setOfficialRaces([]);
 
   fetch(`/api/boatrace?mode=backtest&date=${date}`)
     .then((res) => res.json())
     .then((data) => {
+      console.log("API RESPONSE", data);
+      console.log("RACES COUNT", data.races?.length);
+
       const official = Array.isArray(data.races) ? data.races : [];
+
       setOfficialRaces(official);
       setRaces(official);
     })
-    .catch(() => {
+    .catch((error) => {
+      console.error("FETCH ERROR", error);
       setOfficialRaces([]);
       setRaces([]);
     });
