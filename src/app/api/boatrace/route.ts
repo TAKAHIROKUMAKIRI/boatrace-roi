@@ -167,6 +167,17 @@ function extractRacers(beforeText: string, raceListText: string) {
       `${lane}\\s+\\d+\\s+/\\s+[AB]\\d\\s+${m[2]}\\s+${m[3]}\\s+[^\\s]+\\s+\\d+歳/([\\d.]+)kg\\s+F\\d+\\s+L\\d+\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+(\\d+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+(\\d+)\\s+([\\d.]+)\\s+([\\d.]+)`
     );
 
+    const nameKey = `${m[2]} ${m[3]}`;
+const namePos = list.indexOf(nameKey);
+
+console.log(
+  "RACER BLOCK",
+  lane,
+  racerName,
+  namePos,
+  namePos >= 0 ? list.slice(namePos - 100, namePos + 700) : "NOT FOUND"
+);
+    
     const hit = list.match(pattern);
 
     console.log("RACER SEARCH", lane, racerName, !!hit);
