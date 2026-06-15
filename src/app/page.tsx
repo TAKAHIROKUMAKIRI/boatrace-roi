@@ -68,6 +68,12 @@ const [endDate, setEndDate] = useState("2026-06-09");
     .then((data) => {
   console.log("API RESPONSE", data);
 
+      console.log("RACES COUNT", data.races?.length);
+
+if (data.races?.length > 0) {
+  console.log("FIRST RACE", data.races[0]);
+}
+      
   const official = Array.isArray(data.races)
     ? data.races
     : [];
