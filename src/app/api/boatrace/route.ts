@@ -154,19 +154,23 @@ function extractRacers(text: string) {
 
   const matches = [
     ...normalized.matchAll(
-      /(\d)\s+([^\s]+)\s+([^\s]+)\s+(\d+\.\d)kg\s+([\d.]+)\s+([\d.]+)\s+(-?[\d.]+)/g
+      /(\d)\s+([^\d\s]+)\s+([^\d\s]+)\s+(\d+\.\d)kg\s+([\d.]+)\s+(-?[\d.]+)/g
     ),
   ];
 
-  return matches.map((m) => ({
+  return matches.slice(0, 6).map((m) => ({
     lane: Number(m[1]),
     racerName: `${m[2]} ${m[3]}`,
+
     weight: Number(m[4]),
-    winRate: Number(m[5]),
-    localWinRate: Number(m[6]),
-    averageStart: Math.abs(Number(m[7])),
+    winRate: 5,
+    localWinRate: 5,
+
+    averageStart: 0.15,
+
     motorNo: 0,
     motorRate: 0,
+
     boatNo: 0,
     boatRate: 0,
   }));
