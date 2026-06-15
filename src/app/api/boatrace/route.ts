@@ -320,7 +320,7 @@ export async function GET(request: NextRequest) {
     if (mode === "backtest") {
       const races = [];
 
-      const targetVenues = ["07", "10", "11", "13", "15", "16", "18", "21", "24"];
+      const targetVenues = ["07"];
 
 for (const venueCode of targetVenues) {
         for (let raceNo = 1; raceNo <= 12; raceNo++) {
