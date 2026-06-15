@@ -164,8 +164,8 @@ function extractRacers(beforeText: string, raceListText: string) {
     const racerName = `${m[2]} ${m[3]}`;
 
     const pattern = new RegExp(
-      `${lane}\\s+\\d+\\s+/\\s+[AB]\\d\\s+${m[2]}\\s+${m[3]}\\s+[^\\s]+\\s+\\d+歳/([\\d.]+)kg\\s+F\\d+\\s+L\\d+\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+(\\d+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+(\\d+)\\s+([\\d.]+)\\s+([\\d.]+)`
-    );
+  `${lane}\\s+${m[2]}\\s+${m[3]}\\s+\\d+\\s+F\\d+\\s+L\\d+\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+(\\d+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+(\\d+)\\s+([\\d.]+)\\s+([\\d.]+)`
+);
 
     const nameKey = `${m[2]} ${m[3]}`;
 const namePos = list.indexOf(nameKey);
@@ -192,16 +192,16 @@ console.log("RACELIST PART", list.slice(0, 3000));
 
       weight: Number(m[4]),
 
-      averageStart: hit ? Number(hit[2]) : 0.15,
+      averageStart: hit ? Number(hit[1]) : 0.15,
 
-      winRate: hit ? Number(hit[3]) : 5,
-      localWinRate: hit ? Number(hit[6]) : 5,
+winRate: hit ? Number(hit[2]) : 5,
+localWinRate: hit ? Number(hit[5]) : 5,
 
-      motorNo: hit ? Number(hit[9]) : 0,
-      motorRate: hit ? Number(hit[10]) : 0,
+motorNo: hit ? Number(hit[8]) : 0,
+motorRate: hit ? Number(hit[9]) : 0,
 
-      boatNo: hit ? Number(hit[12]) : 0,
-      boatRate: hit ? Number(hit[13]) : 0,
+boatNo: hit ? Number(hit[11]) : 0,
+boatRate: hit ? Number(hit[12]) : 0,
     };
   });
 }
