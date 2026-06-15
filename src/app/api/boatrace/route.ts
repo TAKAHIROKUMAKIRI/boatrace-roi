@@ -159,27 +159,15 @@ function extractRacers(beforeText: string, raceListText: string) {
     ),
   ];
 
-  return baseMatches.slice(0, 6).map((m, index) => {
+  return baseMatches.slice(0, 6).map((m) => {
     const lane = Number(m[1]);
     const racerName = `${m[2]} ${m[3]}`;
-    const searchName = `${m[2]} ${m[3]}`;
 
-    const startIndex = list.indexOf(searchName);
-    const nextName = baseMatches[index + 1]
-      ? `${baseMatches[index + 1][2]} ${baseMatches[index + 1][3]}`
-      : "";
-
-    const endIndex =
-      nextName && list.indexOf(nextName, startIndex + 1) > startIndex
-        ? list.indexOf(nextName, startIndex + 1)
-        : startIndex + 600;
-
-    const block =
-      startIndex >= 0 ? list.slice(startIndex, endIndex) : "";
-
-    const nums = [...block.matchAll(/\d+\.\d+/g)].map((x) =>
-      Number(x[0])
+    const pattern = new RegExp(
+      `${lane}\\s+\\d+\\s+/\\s+[AB]\\d\\s+${m[2]}\\s+${m[3]}\\s+[^\\s]+\\s+\\d+歳/([\\d.]+)kg\\s+F\\d+\\s+L\\d+\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+(\\d+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+(\\d+)\\s+([\\d.]+)\\s+([\\d.]+)`
     );
+
+    const hit = list.match(pattern);
 
     return {
       lane,
@@ -187,19 +175,16 @@ function extractRacers(beforeText: string, raceListText: string) {
 
       weight: Number(m[4]),
 
-      // 出走表側から拾う。取れなければ暫定値
-      winRate: nums[0] ?? 5,
-      localWinRate: nums[1] ?? nums[0] ?? 5,
-      averageStart: nums.find((n) => n > 0 && n < 0.4) ?? 0.15,
+      averageStart: hit ? Number(hit[2]) : 0.15,
 
-      motorNo: 0,
-      motorRate: nums.find((n) => n >= 20 && n <= 80) ?? 0,
+      winRate: hit ? Number(hit[3]) : 5,
+      localWinRate: hit ? Number(hit[6]) : 5,
 
-      boatNo: 0,
-      boatRate:
-        nums.filter((n) => n >= 20 && n <= 80)[1] ??
-        nums.find((n) => n >= 20 && n <= 80) ??
-        0,
+      motorNo: hit ? Number(hit[9]) : 0,
+      motorRate: hit ? Number(hit[10]) : 0,
+
+      boatNo: hit ? Number(hit[12]) : 0,
+      boatRate: hit ? Number(hit[13]) : 0,
     };
   });
 }
