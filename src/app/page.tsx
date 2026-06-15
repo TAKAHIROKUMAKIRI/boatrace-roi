@@ -60,34 +60,21 @@ const [endDate, setEndDate] = useState("2026-06-09");
 
   const date = startDate.replace(/-/g, "");
 
-  console.log("START DATE", startDate);
-  console.log("FETCH DATE", date);
+  setRaces([]);
+  setOfficialRaces([]);
 
-  fetch(`/api/boatrace?mode=backtest&date=${date}&jcd=07`)
+  fetch(`/api/boatrace?mode=backtest&date=${date}`)
     .then((res) => res.json())
     .then((data) => {
-  console.log("API RESPONSE", data);
-
-      console.log("RACES COUNT", data.races?.length);
-
-if (data.races?.length > 0) {
-  console.log("FIRST RACE", data.races[0]);
-}
-      
-  const official = Array.isArray(data.races)
-    ? data.races
-    : [];
-
-  console.log("RACES COUNT", official.length);
-
-  setOfficialRaces(official);
-  setRaces(official);
-})
+      const official = Array.isArray(data.races) ? data.races : [];
+      setOfficialRaces(official);
+      setRaces(official);
+    })
     .catch(() => {
       setOfficialRaces([]);
       setRaces([]);
     });
-}, [startDate, endDate]);
+}, [startDate]);
 
   const result = useMemo(() => {
   const allBets: BetResult[] = [];
@@ -133,7 +120,8 @@ console.log(
 );
 
       for (const prediction of predictions) {
-        const odds = race.odds?.[prediction.bet] ?? 10;
+        const odds = race.odds?.[prediction.bet];
+if (!odds) continue;
 
         const ev = prediction.probability * odds;
 
