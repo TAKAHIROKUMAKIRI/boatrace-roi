@@ -149,35 +149,64 @@ console.log(
   return odds;
 }
 
-function extractRacers(text: string) {
-  const normalized = text.replace(/\s+/g, " ");
+function extractRacers(beforeText: string, raceListText: string) {
+  const before = beforeText.replace(/\s+/g, " ");
+  const list = raceListText.replace(/\s+/g, " ");
 
-  const matches = [
-    ...normalized.matchAll(
+  const baseMatches = [
+    ...before.matchAll(
       /(\d)\s+([^\d\s]+)\s+([^\d\s]+)\s+(\d+\.\d)kg\s+([\d.]+)\s+(-?[\d.]+)/g
     ),
   ];
 
-  return matches.slice(0, 6).map((m) => ({
-    lane: Number(m[1]),
-    racerName: `${m[2]} ${m[3]}`,
+  return baseMatches.slice(0, 6).map((m, index) => {
+    const lane = Number(m[1]);
+    const racerName = `${m[2]} ${m[3]}`;
+    const searchName = `${m[2]} ${m[3]}`;
 
-    weight: Number(m[4]),
-    winRate: 5,
-    localWinRate: 5,
+    const startIndex = list.indexOf(searchName);
+    const nextName = baseMatches[index + 1]
+      ? `${baseMatches[index + 1][2]} ${baseMatches[index + 1][3]}`
+      : "";
 
-    averageStart: 0.15,
+    const endIndex =
+      nextName && list.indexOf(nextName, startIndex + 1) > startIndex
+        ? list.indexOf(nextName, startIndex + 1)
+        : startIndex + 600;
 
-    motorNo: 0,
-    motorRate: 0,
+    const block =
+      startIndex >= 0 ? list.slice(startIndex, endIndex) : "";
 
-    boatNo: 0,
-    boatRate: 0,
-  }));
+    const nums = [...block.matchAll(/\d+\.\d+/g)].map((x) =>
+      Number(x[0])
+    );
+
+    return {
+      lane,
+      racerName,
+
+      weight: Number(m[4]),
+
+      // 出走表側から拾う。取れなければ暫定値
+      winRate: nums[0] ?? 5,
+      localWinRate: nums[1] ?? nums[0] ?? 5,
+      averageStart: nums.find((n) => n > 0 && n < 0.4) ?? 0.15,
+
+      motorNo: 0,
+      motorRate: nums.find((n) => n >= 20 && n <= 80) ?? 0,
+
+      boatNo: 0,
+      boatRate:
+        nums.filter((n) => n >= 20 && n <= 80)[1] ??
+        nums.find((n) => n >= 20 && n <= 80) ??
+        0,
+    };
+  });
 }
 
 async function getSingleRace(date: string, jcd: string, rno: string) {
   const beforeInfoUrl = `https://www.boatrace.jp/owpc/pc/race/beforeinfo?rno=${rno}&jcd=${jcd}&hd=${date}`;
+  const racelistUrl = `https://www.boatrace.jp/owpc/pc/race/racelist?rno=${rno}&jcd=${jcd}&hd=${date}`;
   const resultUrl = `https://www.boatrace.jp/owpc/pc/race/raceresult?rno=${rno}&jcd=${jcd}&hd=${date}`;
   const oddsUrl = `https://www.boatrace.jp/owpc/pc/race/odds2tf?rno=${rno}&jcd=${jcd}&hd=${date}`;
 
@@ -186,8 +215,10 @@ async function getSingleRace(date: string, jcd: string, rno: string) {
   console.log("ODDS URL", oddsUrl);
 
   const beforeInfo = await fetchText(beforeInfoUrl);
-  const resultPage = await fetchText(resultUrl);
-  const oddsPage = await fetchText(oddsUrl);
+const resultPage = await fetchText(resultUrl);
+const oddsPage = await fetchText(oddsUrl);
+const raceListPage = await fetchText(racelistUrl);
+  
 
   console.log(
   "HTML SIZE",
@@ -212,7 +243,7 @@ console.log(
   
 const result = extractResult(resultPage.text);
 const odds = extractOdds2t(oddsPage.html);
-  const racers = extractRacers(beforeInfo.text);
+  const racers = extractRacers(beforeInfo.text, raceListPage.text);
 
   console.log(
   "PARSE CHECK",
