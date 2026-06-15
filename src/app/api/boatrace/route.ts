@@ -318,34 +318,27 @@ export async function GET(request: NextRequest) {
 
   try {
     if (mode === "backtest") {
-      const races = [];
+  const races = [];
 
-      const targetVenues = ["07"];
+  const targetVenues = ["07"];
 
-for (const venueCode of targetVenues) {
-        for (let raceNo = 1; raceNo <= 12; raceNo++) {
-          const race = await getSingleRace(date, venueCode, String(raceNo));
-
-          if (
-            race.racers.length === 6 &&
-            Object.keys(race.odds).length === 30 &&
-            race.result
-          ) {
-            races.push(race);
-          }
-        }
-      }
-
-      return NextResponse.json({
-        ok: true,
-        mode,
-        date,
-        venueCode: "ALL",
-        venueName: "全場",
-        count: races.length,
-        races,
-      });
+  for (const venueCode of targetVenues) {
+    for (let raceNo = 1; raceNo <= 12; raceNo++) {
+      const race = await getSingleRace(date, venueCode, String(raceNo));
+      races.push(race);
     }
+  }
+
+  return NextResponse.json({
+    ok: true,
+    mode,
+    date,
+    venueCode: "ALL",
+    venueName: "全場",
+    count: races.length,
+    races,
+  });
+}
 
     const race = await getSingleRace(date, jcd, rno);
 
