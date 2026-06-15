@@ -240,6 +240,16 @@ console.log(
   "RESULT HTML",
   resultPage.text.slice(0, 500)
 );
+
+ console.log(
+  "RACELIST PREVIEW",
+  raceListPage.text.slice(0, 5000)
+);
+
+  console.log(
+  "RACELIST HTML",
+  raceListPage.html.slice(0, 10000)
+);
   
 const result = extractResult(resultPage.text);
 const odds = extractOdds2t(oddsPage.html);
