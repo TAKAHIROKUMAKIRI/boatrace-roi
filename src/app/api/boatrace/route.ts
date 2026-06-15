@@ -180,6 +180,18 @@ console.log(
     
     const hit = list.match(pattern);
 
+    if (!hit) {
+  console.log(
+    "NO MATCH",
+    lane,
+    racerName,
+    list.slice(
+      Math.max(0, namePos - 50),
+      namePos + 300
+    )
+  );
+}
+    
     console.log("RACER SEARCH", lane, racerName, !!hit);
 
 console.log("PATTERN", pattern.source);
