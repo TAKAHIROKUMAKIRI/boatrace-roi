@@ -169,6 +169,12 @@ function extractRacers(beforeText: string, raceListText: string) {
 
     const hit = list.match(pattern);
 
+    console.log("RACER SEARCH", lane, racerName, !!hit);
+
+console.log("PATTERN", pattern.source);
+
+console.log("RACELIST PART", list.slice(0, 3000));
+    
     return {
       lane,
       racerName,
