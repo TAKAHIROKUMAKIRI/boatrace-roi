@@ -164,7 +164,7 @@ function extractRacers(beforeText: string, raceListText: string) {
     const racerName = `${m[2]} ${m[3]}`;
 
     const pattern = new RegExp(
-  `${lane}\\s+${m[2]}\\s+${m[3]}\\s+\\d+\\s+F\\d+\\s+L\\d+\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+(\\d+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+(\\d+)\\s+([\\d.]+)\\s+([\\d.]+)`
+  `${lane}\\s+\\d+\\s*\\/\\s*[AB]\\d\\s+${m[2]}\\s+${m[3]}\\s+[^\\s]+\\s+\\d+歳\\/[\\d.]+kg\\s+F\\d+\\s+L\\d+\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+(\\d+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+(\\d+)\\s+([\\d.]+)\\s+([\\d.]+)`
 );
 
     const nameKey = `${m[2]} ${m[3]}`;
