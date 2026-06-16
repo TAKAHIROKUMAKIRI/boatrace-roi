@@ -183,16 +183,16 @@ console.log("NUMS", lane, racerName, nums.slice(0, 25));
 
   weight: Number(m[4]),
 
-  averageStart: nums[2] ?? 0.15,
+  averageStart: nums[4] ?? 0.15,
 
-  winRate: nums[3] ?? 5,
-  localWinRate: nums[6] ?? 5,
+  winRate: nums[5] ?? 5,
+  localWinRate: nums[8] ?? 5,
 
-  motorNo: nums[9] ?? 0,
-  motorRate: nums[10] ?? 0,
+  motorNo: nums[11] ?? 0,
+  motorRate: nums[12] ?? 0,
 
-  boatNo: nums[12] ?? 0,
-  boatRate: nums[13] ?? 0,
+  boatNo: nums[14] ?? 0,
+  boatRate: nums[15] ?? 0,
 };
   });
 }
