@@ -56,32 +56,32 @@ const [endDate, setEndDate] = useState("2026-06-09");
   `¥${(value ?? 0).toLocaleString()}`;
 
   useEffect(() => {
-  if (!startDate) return;
+  if (!startDate || !endDate) return;
 
-  const date = startDate.replace(/-/g, "");
-
-  console.log("FETCH START", date);
+  const start = startDate.replace(/-/g, "");
+  const end = endDate.replace(/-/g, "");
 
   setRaces([]);
   setOfficialRaces([]);
 
-  fetch(`/api/boatrace?mode=backtest&date=${date}`)
+  fetch(
+    `/api/boatrace?mode=backtest&startDate=${start}&endDate=${end}`
+  )
     .then((res) => res.json())
     .then((data) => {
-
-
-
-      const official = Array.isArray(data.races) ? data.races : [];
+      const official = Array.isArray(data.races)
+        ? data.races
+        : [];
 
       setOfficialRaces(official);
       setRaces(official);
     })
     .catch((error) => {
-      console.error("FETCH ERROR", error);
+      console.error(error);
       setOfficialRaces([]);
       setRaces([]);
     });
-}, [startDate]);
+}, [startDate, endDate]);
 
   const result = useMemo(() => {
   const allBets: BetResult[] = [];
