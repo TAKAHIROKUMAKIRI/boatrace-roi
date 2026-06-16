@@ -68,11 +68,8 @@ const [endDate, setEndDate] = useState("2026-06-09");
   fetch(`/api/boatrace?mode=backtest&date=${date}`)
     .then((res) => res.json())
     .then((data) => {
-      console.log(
-  "API RESPONSE",
-  JSON.stringify(data, null, 2)
-);
-      console.log("RACES COUNT", data.races?.length);
+
+
 
       const official = Array.isArray(data.races) ? data.races : [];
 
@@ -106,28 +103,14 @@ const [endDate, setEndDate] = useState("2026-06-09");
   }
 
   for (const race of races) {
-  console.log(
-    race.race,
-    "racers",
-    race.racers?.length,
-    "odds",
-    Object.keys(race.odds || {}).length,
-    "result",
-    race.result
-  );
+
 
   if (!race.racers || race.racers.length !== 6 || !race.odds) {
-    console.log("SKIP", race.race);
+
     continue;
   }
 
   const predictions = predictExacta(race.racers);
-
-console.log(
-  race.race,
-  "predictions",
-  predictions.length
-);
 
       for (const prediction of predictions) {
         const odds = race.odds?.[prediction.bet];
@@ -147,27 +130,10 @@ if (!odds) continue;
       }
     }
 
-    console.log("ALL BETS", allBets.length);
-
-console.log(
-  "TOP 20 EV",
-  [...allBets]
-    .sort((a, b) => b.ev - a.ev)
-    .slice(0, 20)
-    .map((b) => ({
-      race: b.race,
-      bet: b.bet,
-      ev: b.ev,
-      odds: b.odds,
-      prob: b.probability,
-    }))
-);
     
     const filteredBets = allBets.filter(
       (b) => b.ev >= evThreshold && b.odds >= minOdds && b.odds <= maxOdds
     );
-
-    console.log("FILTERED", filteredBets.length);
     
     const raceGroups = filteredBets.reduce<Record<string, BetResult[]>>(
       (groups, bet) => {
@@ -303,7 +269,7 @@ console.log(
     type="date"
     value={startDate}
     onChange={(e) => {
-  console.log("CHANGE START", e.target.value);
+
   setStartDate(e.target.value);
 }}
   />
