@@ -269,9 +269,15 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
 
   const mode = searchParams.get("mode") ?? "single";
-  const date = searchParams.get("date") ?? "20260609";
-  const jcd = searchParams.get("jcd") ?? "07";
-  const rno = searchParams.get("rno") ?? "1";
+
+const startDate =
+  searchParams.get("startDate") ?? "20260609";
+
+const endDate =
+  searchParams.get("endDate") ?? startDate;
+
+const jcd = searchParams.get("jcd") ?? "07";
+const rno = searchParams.get("rno") ?? "1";
 
   try {
     if (mode === "backtest") {
@@ -286,9 +292,34 @@ export async function GET(request: NextRequest) {
 
 const raceTasks = [];
 
-for (const venueCode of targetVenues) {
-  for (let raceNo = 1; raceNo <= 12; raceNo++) {
-    raceTasks.push(getSingleRace(date, venueCode, String(raceNo)));
+const start = new Date(
+  `${startDate.slice(0,4)}-${startDate.slice(4,6)}-${startDate.slice(6,8)}`
+);
+
+const end = new Date(
+  `${endDate.slice(0,4)}-${endDate.slice(4,6)}-${endDate.slice(6,8)}`
+);
+
+for (
+  let d = new Date(start);
+  d <= end;
+  d.setDate(d.getDate() + 1)
+) {
+  const dateStr =
+    d.getFullYear().toString() +
+    String(d.getMonth() + 1).padStart(2, "0") +
+    String(d.getDate()).padStart(2, "0");
+
+  for (const venueCode of targetVenues) {
+    for (let raceNo = 1; raceNo <= 12; raceNo++) {
+      raceTasks.push(
+        getSingleRace(
+          dateStr,
+          venueCode,
+          String(raceNo)
+        )
+      );
+    }
   }
 }
 
@@ -297,7 +328,8 @@ const allRaces = await Promise.all(raceTasks);
 return NextResponse.json({
   ok: true,
   mode,
-  date,
+  startDate,
+  endDate,
   venueCode: "ALL",
   venueName: "全場",
   count: allRaces.length,
