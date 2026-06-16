@@ -163,66 +163,37 @@ function extractRacers(beforeText: string, raceListText: string) {
     const lane = Number(m[1]);
     const racerName = `${m[2]} ${m[3]}`;
 
-    const pattern = new RegExp(
-  `${lane}\\s+\\d+\\s*\\/\\s*[AB]\\d\\s+${m[2]}\\s+${m[3]}\\s+[^\\s]+\\s+\\d+歳\\/[\\d.]+kg\\s+F\\d+\\s+L\\d+\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+(\\d+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+(\\d+)\\s+([\\d.]+)\\s+([\\d.]+)`
-);
-
     const nameKey = `${m[2]} ${m[3]}`;
 const namePos = list.indexOf(nameKey);
 
-console.log(
-  "RACER BLOCK",
-  lane,
-  racerName,
-  namePos,
-  namePos >= 0 ? list.slice(namePos - 100, namePos + 700) : "NOT FOUND"
+const block =
+  namePos >= 0
+    ? list.slice(namePos, namePos + 350)
+    : "";
+
+const nums = [...block.matchAll(/\d+\.\d+|\d+/g)].map((x) =>
+  Number(x[0])
 );
-    
-    const hit = list.match(pattern);
 
-    console.log(
-  "PATTERN RESULT",
-  lane,
-  racerName,
-  !!hit,
-  hit?.slice?.(0, 15)
-);
-    
-    if (!hit) {
-  console.log(
-    "NO MATCH",
-    lane,
-    racerName,
-    list.slice(
-      Math.max(0, namePos - 50),
-      namePos + 300
-    )
-  );
-}
-    
-    console.log("RACER SEARCH", lane, racerName, !!hit);
-
-console.log("PATTERN", pattern.source);
-
-console.log("RACELIST PART", list.slice(0, 3000));
+console.log("NUMS", lane, racerName, nums.slice(0, 25));
     
     return {
-      lane,
-      racerName,
+  lane,
+  racerName,
 
-      weight: Number(m[4]),
+  weight: Number(m[4]),
 
-      averageStart: hit ? Number(hit[1]) : 0.15,
+  averageStart: nums[2] ?? 0.15,
 
-winRate: hit ? Number(hit[2]) : 5,
-localWinRate: hit ? Number(hit[5]) : 5,
+  winRate: nums[3] ?? 5,
+  localWinRate: nums[6] ?? 5,
 
-motorNo: hit ? Number(hit[8]) : 0,
-motorRate: hit ? Number(hit[9]) : 0,
+  motorNo: nums[9] ?? 0,
+  motorRate: nums[10] ?? 0,
 
-boatNo: hit ? Number(hit[11]) : 0,
-boatRate: hit ? Number(hit[12]) : 0,
-    };
+  boatNo: nums[12] ?? 0,
+  boatRate: nums[13] ?? 0,
+};
   });
 }
 
