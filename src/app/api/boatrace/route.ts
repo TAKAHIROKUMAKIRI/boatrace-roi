@@ -337,7 +337,7 @@ return NextResponse.json({
 });
 }
 
-    const race = await getSingleRace(date, jcd, rno);
+    const race = await getSingleRace(startDate, jcd, rno);
 
     return NextResponse.json({
       ok: true,
