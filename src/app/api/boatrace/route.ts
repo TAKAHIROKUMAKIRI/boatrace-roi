@@ -292,7 +292,7 @@ for (const venueCode of targetVenues) {
   }
 }
 
-const races = await Promise.all(raceTasks);
+const allRaces = await Promise.all(raceTasks);
 
 return NextResponse.json({
   ok: true,
@@ -300,8 +300,8 @@ return NextResponse.json({
   date,
   venueCode: "ALL",
   venueName: "全場",
-  count: races.length,
-  races,
+  count: allRaces.length,
+  races: allRaces,
 });
 }
 
