@@ -59,10 +59,7 @@ async function fetchText(url: string) {
 }
 
 function extractResult(text: string) {
-console.log(
-  "RESULT INPUT",
-  text.slice(0, 1000)
-);
+
   
   const normalized = text
     .replace(/&yen;/g, "¥")
@@ -111,10 +108,6 @@ console.log(
 }
 
 function extractOdds2t(html: string) {
-console.log(
-  "ODDS INPUT",
-  html.slice(0, 1000)
-);
   
   const odds: Record<string, number> = {};
 
@@ -174,8 +167,6 @@ const block =
 const nums = [...block.matchAll(/\d+\.\d+|\d+/g)].map((x) =>
   Number(x[0])
 );
-
-console.log("NUMS", lane, racerName, nums.slice(0, 25));
     
     return {
   lane,
@@ -203,86 +194,20 @@ async function getSingleRace(date: string, jcd: string, rno: string) {
   const resultUrl = `https://www.boatrace.jp/owpc/pc/race/raceresult?rno=${rno}&jcd=${jcd}&hd=${date}`;
   const oddsUrl = `https://www.boatrace.jp/owpc/pc/race/odds2tf?rno=${rno}&jcd=${jcd}&hd=${date}`;
 
-  console.log("BEFORE URL", beforeInfoUrl);
-  console.log("RESULT URL", resultUrl);
-  console.log("ODDS URL", oddsUrl);
-
   const beforeInfo = await fetchText(beforeInfoUrl);
 const resultPage = await fetchText(resultUrl);
 const oddsPage = await fetchText(oddsUrl);
 const raceListPage = await fetchText(racelistUrl);
   
-
-  console.log(
-  "HTML SIZE",
-  date,
-  rno,
-  beforeInfo.html.length,
-  resultPage.html.length,
-  oddsPage.html.length
-);
-  
-console.log("ODDS URL", oddsUrl);
-
-console.log(
-  "ODDS HTML",
-  oddsPage.html.slice(0, 500)
-);
-
-  console.log(
-  "RESULT HTML",
-  resultPage.text.slice(0, 500)
-);
-
- console.log(
-  "RACELIST PREVIEW",
-  raceListPage.text.slice(0, 5000)
-);
-
-  console.log(
-  "RACELIST HTML",
-  raceListPage.html.slice(0, 10000)
-);
   
 const result = extractResult(resultPage.text);
 const odds = extractOdds2t(oddsPage.html);
   const racers = extractRacers(beforeInfo.text, raceListPage.text);
 
-  console.log(
-  "PARSE CHECK",
-  date,
-  rno,
-  beforeInfo.text.slice(0, 300),
-  oddsPage.text.slice(0, 300),
-  resultPage.text.slice(0, 300)
-);
-  
-  console.log(
-  "RACE DEBUG",
-  date,
-  rno,
-  "racers",
-  racers.length,
-  "odds",
-  Object.keys(odds).length,
-  "result",
-  result.result
-);
 
-  console.log(
-  "URLS",
-  beforeInfoUrl,
-  resultUrl,
-  oddsUrl
-);
   
   if (Object.keys(odds).length === 0) {
-  console.log(
-    "ODDS EMPTY",
-    date,
-    rno,
-    oddsPage.html.slice(0, 1000)
-  );
+  
 }
   
   const venueName = VENUE_NAMES[jcd] ?? jcd;
@@ -293,13 +218,7 @@ const odds = extractOdds2t(oddsPage.html);
   oddsPage.text.includes("見つかりませんでした");
 
   if (date === "20260608" && rno === "1") {
-  console.log("BEFORE ERROR", beforeInfo.text.includes("見つかりませんでした"));
-  console.log("RESULT ERROR", resultPage.text.includes("見つかりませんでした"));
-  console.log("ODDS ERROR", oddsPage.text.includes("見つかりませんでした"));
 
-  console.log("BEFORE LEN", beforeInfo.text.length);
-  console.log("RESULT LEN", resultPage.text.length);
-  console.log("ODDS LEN", oddsPage.text.length);
 }
   
   return {
@@ -358,7 +277,7 @@ export async function GET(request: NextRequest) {
     if (mode === "backtest") {
   const races = [];
 
-  const targetVenues = ["07"];
+  const targetVenues = ["07", "08", "09"];
 
   for (const venueCode of targetVenues) {
     for (let raceNo = 1; raceNo <= 12; raceNo++) {
