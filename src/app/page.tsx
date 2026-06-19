@@ -104,7 +104,7 @@ export default function Home() {
   };
 
   const load = async () => {
-    setLoading(true);
+    setIsLoading(true);
     setErrorMessage("");
     setRaces([]);
     setOfficialRaces([]);
@@ -145,7 +145,7 @@ export default function Home() {
       setOfficialRaces([]);
       setRaces([]);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
