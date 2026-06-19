@@ -84,35 +84,73 @@ export default function Home() {
     `¥${(value ?? 0).toLocaleString()}`;
 
   useEffect(() => {
-    if (!startDate || !endDate) return;
+  if (!startDate || !endDate) return;
 
-    const start = startDate.replace(/-/g, "");
-    const end = endDate.replace(/-/g, "");
+  const getDates = (start: string, end: string) => {
+    const dates: string[] = [];
+    const current = new Date(start);
+    const last = new Date(end);
 
-    setIsLoading(true);
+    while (current <= last) {
+      dates.push(
+        current.getFullYear().toString() +
+          String(current.getMonth() + 1).padStart(2, "0") +
+          String(current.getDate()).padStart(2, "0")
+      );
+      current.setDate(current.getDate() + 1);
+    }
+
+    return dates;
+  };
+
+  const load = async () => {
+    setLoading(true);
     setErrorMessage("");
     setRaces([]);
+    setOfficialRaces([]);
 
-    fetch(`/api/boatrace?mode=backtest&startDate=${start}&endDate=${end}`)
-      .then(async (res) => {
-        if (!res.ok) {
-          throw new Error(`API error: ${res.status}`);
+    try {
+      const dates = getDates(startDate, endDate);
+      const allRaces: Race[] = [];
+
+      for (const date of dates) {
+        const cacheKey = `boatrace-${date}`;
+        const cached = localStorage.getItem(cacheKey);
+
+        if (cached) {
+          allRaces.push(...JSON.parse(cached));
+          continue;
         }
-        return res.json();
-      })
-      .then((data) => {
-        const official = Array.isArray(data.races) ? data.races : [];
-        setRaces(official);
-      })
-      .catch((error) => {
-        console.error(error);
-        setErrorMessage("データ取得に失敗しました。期間を短くするか、時間をおいて再実行してください。");
-        setRaces([]);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [startDate, endDate]);
+
+        const res = await fetch(
+          `/api/boatrace?mode=backtest&startDate=${date}&endDate=${date}`
+        );
+
+        if (!res.ok) {
+          throw new Error(`API error ${res.status}`);
+        }
+
+        const data = await res.json();
+        const racesForDate = Array.isArray(data.races) ? data.races : [];
+
+        localStorage.setItem(cacheKey, JSON.stringify(racesForDate));
+        allRaces.push(...racesForDate);
+      }
+
+      setOfficialRaces(allRaces);
+      setRaces(allRaces);
+    } catch (error) {
+      console.error(error);
+      setErrorMessage("データ取得に失敗しました。期間を短くして再実行してください。");
+      setOfficialRaces([]);
+      setRaces([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  load();
+}, [startDate, endDate]);
 
   const result = useMemo<BacktestResult>(() => {
     const allBets: BetResult[] = [];
