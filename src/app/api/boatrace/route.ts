@@ -28,6 +28,7 @@ const VENUE_NAMES: Record<string, string> = {
 };
 
 const VENUE_CODES = Object.keys(VENUE_NAMES);
+const BATCH_SIZE = 50;
 
 function htmlToText(html: string) {
   return html
@@ -49,22 +50,21 @@ async function fetchText(url: string) {
     cache: "no-store",
   });
 
+  if (!response.ok) {
+    throw new Error(`fetch failed ${response.status}: ${url}`);
+  }
+
   const html = await response.text();
 
   return {
-  html,
-  text: htmlToText(html),
-  rawHtml: html,
-};
+    html,
+    text: htmlToText(html),
+    rawHtml: html,
+  };
 }
 
 function extractResult(text: string) {
-
-  
-  const normalized = text
-    .replace(/&yen;/g, "¥")
-    .replace(/\s+/g, " ");
-
+  const normalized = text.replace(/&yen;/g, "¥").replace(/\s+/g, " ");
   const index = normalized.indexOf("2連単");
 
   if (index < 0) {
@@ -76,7 +76,6 @@ function extractResult(text: string) {
   }
 
   const snippet = normalized.substring(index, index + 300);
-
   const match = snippet.match(/2連単\s+(\d)\s*-\s*(\d)/);
 
   if (!match) {
@@ -88,7 +87,6 @@ function extractResult(text: string) {
   }
 
   const yenIndex = snippet.indexOf("¥");
-
   let payout = null;
 
   if (yenIndex >= 0) {
@@ -108,14 +106,12 @@ function extractResult(text: string) {
 }
 
 function extractOdds2t(html: string) {
-  
   const odds: Record<string, number> = {};
 
   const start = html.indexOf("2連単オッズ");
   const end = html.indexOf("2連複オッズ");
 
-  const target =
-    start >= 0 && end > start ? html.slice(start, end) : html;
+  const target = start >= 0 && end > start ? html.slice(start, end) : html;
 
   const matches = [
     ...target.matchAll(
@@ -157,34 +153,31 @@ function extractRacers(beforeText: string, raceListText: string) {
     const racerName = `${m[2]} ${m[3]}`;
 
     const nameKey = `${m[2]} ${m[3]}`;
-const namePos = list.indexOf(nameKey);
+    const namePos = list.indexOf(nameKey);
 
-const block =
-  namePos >= 0
-    ? list.slice(namePos, namePos + 350)
-    : "";
+    const block = namePos >= 0 ? list.slice(namePos, namePos + 350) : "";
 
-const nums = [...block.matchAll(/\d+\.\d+|\d+/g)].map((x) =>
-  Number(x[0])
-);
-    
+    const nums = [...block.matchAll(/\d+\.\d+|\d+/g)].map((x) =>
+      Number(x[0])
+    );
+
     return {
-  lane,
-  racerName,
+      lane,
+      racerName,
 
-  weight: Number(m[4]),
+      weight: Number(m[4]),
 
-  averageStart: nums[4] ?? 0.15,
+      averageStart: nums[4] ?? 0.15,
 
-  winRate: nums[5] ?? 5,
-  localWinRate: nums[8] ?? 5,
+      winRate: nums[5] ?? 5,
+      localWinRate: nums[8] ?? 5,
 
-  motorNo: nums[11] ?? 0,
-  motorRate: nums[12] ?? 0,
+      motorNo: nums[11] ?? 0,
+      motorRate: nums[12] ?? 0,
 
-  boatNo: nums[14] ?? 0,
-  boatRate: nums[15] ?? 0,
-};
+      boatNo: nums[14] ?? 0,
+      boatRate: nums[15] ?? 0,
+    };
   });
 }
 
@@ -194,75 +187,117 @@ async function getSingleRace(date: string, jcd: string, rno: string) {
   const resultUrl = `https://www.boatrace.jp/owpc/pc/race/raceresult?rno=${rno}&jcd=${jcd}&hd=${date}`;
   const oddsUrl = `https://www.boatrace.jp/owpc/pc/race/odds2tf?rno=${rno}&jcd=${jcd}&hd=${date}`;
 
-  const beforeInfo = await fetchText(beforeInfoUrl);
-const resultPage = await fetchText(resultUrl);
-const oddsPage = await fetchText(oddsUrl);
-const raceListPage = await fetchText(racelistUrl);
-  
-  
-const result = extractResult(resultPage.text);
-const odds = extractOdds2t(oddsPage.html);
+  const [beforeInfo, resultPage, oddsPage, raceListPage] = await Promise.all([
+    fetchText(beforeInfoUrl),
+    fetchText(resultUrl),
+    fetchText(oddsUrl),
+    fetchText(racelistUrl),
+  ]);
+
+  const result = extractResult(resultPage.text);
+  const odds = extractOdds2t(oddsPage.html);
   const racers = extractRacers(beforeInfo.text, raceListPage.text);
 
-
-  
-  if (Object.keys(odds).length === 0) {
-  
-}
-  
   const venueName = VENUE_NAMES[jcd] ?? jcd;
 
   const isErrorPage =
-  beforeInfo.text.includes("見つかりませんでした") ||
-  resultPage.text.includes("見つかりませんでした") ||
-  oddsPage.text.includes("見つかりませんでした");
+    beforeInfo.text.includes("見つかりませんでした") ||
+    resultPage.text.includes("見つかりませんでした") ||
+    oddsPage.text.includes("見つかりませんでした") ||
+    raceListPage.text.includes("見つかりませんでした");
 
-  if (date === "20260608" && rno === "1") {
-
-}
-  
   return {
-  raceId: `${date}-${jcd}-${rno}`,
-  date,
-  venueCode: jcd,
-  venueName,
-  raceNo: Number(rno),
-  race: `${venueName} ${rno}R`,
-
+    raceId: `${date}-${jcd}-${rno}`,
+    date,
+    venueCode: jcd,
+    venueName,
+    raceNo: Number(rno),
+    race: `${venueName} ${rno}R`,
     isErrorPage,
-    
-  result: result.result,
-  payout: result.payout,
 
-  odds,
+    result: result.result,
+    payout: result.payout,
 
-  racers, 
+    odds,
+    racers,
 
-  debugSnippet: result.debugSnippet,
+    debugSnippet: result.debugSnippet,
 
-  sourceUrls: {
-    beforeInfo: beforeInfoUrl,
-    result: resultUrl,
-    odds: oddsUrl,
-  },
+    sourceUrls: {
+      beforeInfo: beforeInfoUrl,
+      racelist: racelistUrl,
+      result: resultUrl,
+      odds: oddsUrl,
+    },
+  };
+}
 
-  debug: {
-    beforeInfoTextPreview: beforeInfo.text.slice(0, 3000),
-    beforeInfoHtmlPreview: (() => {
-  const index = beforeInfo.html.indexOf("体重");
-  return index >= 0
-    ? beforeInfo.html.slice(index, index + 12000)
-    : beforeInfo.html.slice(0, 12000);
-})(),
-    resultTextPreview: resultPage.text.slice(0, 1200),
-    oddsHtmlPreview: (() => {
-  const index = oddsPage.html.indexOf("2連単オッズ");
-  return index >= 0
-    ? oddsPage.html.slice(index, index + 8000)
-    : oddsPage.html.slice(0, 8000);
-})(),
-  },
-};
+function yyyymmddToDate(value: string) {
+  return new Date(
+    `${value.slice(0, 4)}-${value.slice(4, 6)}-${value.slice(6, 8)}`
+  );
+}
+
+function formatDate(d: Date) {
+  return (
+    d.getFullYear().toString() +
+    String(d.getMonth() + 1).padStart(2, "0") +
+    String(d.getDate()).padStart(2, "0")
+  );
+}
+
+function buildRaceTasks(startDate: string, endDate: string) {
+  const tasks: Array<() => Promise<Awaited<ReturnType<typeof getSingleRace>>>> =
+    [];
+
+  const start = yyyymmddToDate(startDate);
+  const end = yyyymmddToDate(endDate);
+
+  for (
+    let d = new Date(start);
+    d <= end;
+    d.setDate(d.getDate() + 1)
+  ) {
+    const dateStr = formatDate(d);
+
+    for (const venueCode of VENUE_CODES) {
+      for (let raceNo = 1; raceNo <= 12; raceNo++) {
+        tasks.push(() => getSingleRace(dateStr, venueCode, String(raceNo)));
+      }
+    }
+  }
+
+  return tasks;
+}
+
+async function runInBatches<T>(
+  tasks: Array<() => Promise<T>>,
+  batchSize: number
+) {
+  const fulfilled: T[] = [];
+  const rejected: string[] = [];
+
+  for (let i = 0; i < tasks.length; i += batchSize) {
+    const batch = tasks.slice(i, i + batchSize);
+    const results = await Promise.allSettled(batch.map((task) => task()));
+
+    for (const result of results) {
+      if (result.status === "fulfilled") {
+        fulfilled.push(result.value);
+      } else {
+        rejected.push(
+          result.reason instanceof Error
+            ? result.reason.message
+            : String(result.reason)
+        );
+      }
+    }
+  }
+
+  return {
+    fulfilled,
+    rejected,
+  };
 }
 
 export async function GET(request: NextRequest) {
@@ -270,76 +305,36 @@ export async function GET(request: NextRequest) {
 
   const mode = searchParams.get("mode") ?? "single";
 
-const startDate =
-  searchParams.get("startDate") ?? "20260609";
+  const startDate = searchParams.get("startDate") ?? "20260609";
+  const endDate = searchParams.get("endDate") ?? startDate;
 
-const endDate =
-  searchParams.get("endDate") ?? startDate;
-
-const jcd = searchParams.get("jcd") ?? "07";
-const rno = searchParams.get("rno") ?? "1";
+  const jcd = searchParams.get("jcd") ?? "07";
+  const rno = searchParams.get("rno") ?? "1";
 
   try {
     if (mode === "backtest") {
-  const races = [];
+      const raceTasks = buildRaceTasks(startDate, endDate);
 
- const targetVenues = [
-  "01","02","03","04","05","06",
-  "07","08","09","10","11","12",
-  "13","14","15","16","17","18",
-  "19","20","21","22","23","24"
-];
-
-const raceTasks = [];
-
-const start = new Date(
-  `${startDate.slice(0,4)}-${startDate.slice(4,6)}-${startDate.slice(6,8)}`
-);
-
-const end = new Date(
-  `${endDate.slice(0,4)}-${endDate.slice(4,6)}-${endDate.slice(6,8)}`
-);
-
-for (
-  let d = new Date(start);
-  d <= end;
-  d.setDate(d.getDate() + 1)
-) {
-  const dateStr =
-    d.getFullYear().toString() +
-    String(d.getMonth() + 1).padStart(2, "0") +
-    String(d.getDate()).padStart(2, "0");
-
-  for (const venueCode of targetVenues) {
-    for (let raceNo = 1; raceNo <= 12; raceNo++) {
-      raceTasks.push(
-        getSingleRace(
-          dateStr,
-          venueCode,
-          String(raceNo)
-        )
+      const { fulfilled: allRaces, rejected } = await runInBatches(
+        raceTasks,
+        BATCH_SIZE
       );
+
+      return NextResponse.json({
+        ok: true,
+        mode,
+        startDate,
+        endDate,
+        venueCode: "ALL",
+        venueName: "全場",
+        requestedCount: raceTasks.length,
+        successCount: allRaces.length,
+        failedCount: rejected.length,
+        failedSamples: rejected.slice(0, 5),
+        count: allRaces.length,
+        races: allRaces,
+      });
     }
-  }
-}
-
-const allRacesRaw = await Promise.allSettled(raceTasks);
-
-const allRaces = allRacesRaw
-  .filter((r) => r.status === "fulfilled")
-  .map((r) => r.value);
-
-return NextResponse.json({
-  ok: true,
-  mode,
-  startDate,
-  endDate,
-  venueCode: "ALL",
-  venueName: "全場",
-  count: allRaces.length,
-  races: allRaces,
-});
-}
 
     const race = await getSingleRace(startDate, jcd, rno);
 
@@ -359,4 +354,3 @@ return NextResponse.json({
     );
   }
 }
-
