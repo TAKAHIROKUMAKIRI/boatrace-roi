@@ -10,23 +10,10 @@ type Race = {
   venueName: string;
   raceNo: number;
   race: string;
-
   result: string;
   payout: number;
-
   odds: Record<string, number>;
-
   racers: Racer[];
-};
-
-type OfficialRace = {
-  raceId: string;
-  date: string;
-  venueName: string;
-  raceNo: number;
-  result: string | null;
-  payout: number | null;
-  odds?: Record<string, number>;
 };
 
 type BetResult = {
@@ -39,82 +26,111 @@ type BetResult = {
   hit: boolean;
 };
 
+type EvComparison = {
+  threshold: number;
+  betCount: number;
+  hitCount: number;
+  hitRate: number;
+  investment: number;
+  payout: number;
+  profit: number;
+  roi: number;
+};
+
+type BacktestResult = {
+  totalCandidates: number;
+  bets: BetResult[];
+  skippedBets: Array<BetResult & { reason: string }>;
+  evComparisons: EvComparison[];
+  investment: number;
+  payout: number;
+  profit: number;
+  roi: number;
+  hitCount: number;
+  hitRate: number;
+};
+
+const emptyResult: BacktestResult = {
+  totalCandidates: 0,
+  bets: [],
+  skippedBets: [],
+  evComparisons: [],
+  investment: 0,
+  payout: 0,
+  profit: 0,
+  roi: 0,
+  hitCount: 0,
+  hitRate: 0,
+};
+
 export default function Home() {
   const [evThreshold, setEvThreshold] = useState(1.15);
   const [minOdds, setMinOdds] = useState(4);
   const [maxOdds, setMaxOdds] = useState(50);
 
   const [startDate, setStartDate] = useState("2026-06-09");
-const [endDate, setEndDate] = useState("2026-06-09");
-  
+  const [endDate, setEndDate] = useState("2026-06-09");
+
   const [races, setRaces] = useState<Race[]>([]);
-  const [officialRaces, setOfficialRaces] =
-  useState<Race[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showRaceDetails, setShowRaceDetails] = useState(false);
+  const [showOfficialData, setShowOfficialData] = useState(false);
+  const [showSkippedBets, setShowSkippedBets] = useState(false);
+
   const stake = 1000;
 
   const yen = (value: number | null | undefined) =>
-  `¥${(value ?? 0).toLocaleString()}`;
+    `¥${(value ?? 0).toLocaleString()}`;
 
   useEffect(() => {
-  if (!startDate || !endDate) return;
+    if (!startDate || !endDate) return;
 
-  const start = startDate.replace(/-/g, "");
-  const end = endDate.replace(/-/g, "");
+    const start = startDate.replace(/-/g, "");
+    const end = endDate.replace(/-/g, "");
 
-  setRaces([]);
-  setOfficialRaces([]);
+    setIsLoading(true);
+    setErrorMessage("");
+    setRaces([]);
 
-  fetch(
-    `/api/boatrace?mode=backtest&startDate=${start}&endDate=${end}`
-  )
-    .then((res) => res.json())
-    .then((data) => {
-      const official = Array.isArray(data.races)
-        ? data.races
-        : [];
+    fetch(`/api/boatrace?mode=backtest&startDate=${start}&endDate=${end}`)
+      .then(async (res) => {
+        if (!res.ok) {
+          throw new Error(`API error: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        const official = Array.isArray(data.races) ? data.races : [];
+        setRaces(official);
+      })
+      .catch((error) => {
+        console.error(error);
+        setErrorMessage("データ取得に失敗しました。期間を短くするか、時間をおいて再実行してください。");
+        setRaces([]);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [startDate, endDate]);
 
-      setOfficialRaces(official);
-      setRaces(official);
-    })
-    .catch((error) => {
-      console.error(error);
-      setOfficialRaces([]);
-      setRaces([]);
-    });
-}, [startDate, endDate]);
+  const result = useMemo<BacktestResult>(() => {
+    const allBets: BetResult[] = [];
 
-  const result = useMemo(() => {
-  const allBets: BetResult[] = [];
+    if (!races || races.length === 0) {
+      return emptyResult;
+    }
 
-  if (!races || races.length === 0) {
-    return {
-      totalRaces: 0,
-      totalCandidates: 0,
-      bets: [],
-      skippedBets: [],
-      hitCount: 0,
-      hitRate: 0,
-      investment: 0,
-      payout: 0,
-      profit: 0,
-      roi: 0,
-      evComparisons: [],
-    };
-  }
+    for (const race of races) {
+      if (!race.racers || race.racers.length !== 6 || !race.odds) {
+        continue;
+      }
 
-  for (const race of races) {
-
-
-  if (!race.racers || race.racers.length !== 6 || !race.odds) {
-
-    continue;
-  }
-
-  const predictions = predictExacta(race.racers);
+      const predictions = predictExacta(race.racers);
 
       for (const prediction of predictions) {
         const odds = race.odds?.[prediction.bet];
-if (!odds) continue;
+        if (!odds) continue;
 
         const ev = prediction.probability * odds;
 
@@ -130,11 +146,10 @@ if (!odds) continue;
       }
     }
 
-    
     const filteredBets = allBets.filter(
       (b) => b.ev >= evThreshold && b.odds >= minOdds && b.odds <= maxOdds
     );
-    
+
     const raceGroups = filteredBets.reduce<Record<string, BetResult[]>>(
       (groups, bet) => {
         if (!groups[bet.race]) groups[bet.race] = [];
@@ -148,8 +163,11 @@ if (!odds) continue;
       raceBets.sort((a, b) => b.ev - a.ev).slice(0, 3)
     );
 
-        const investment = bets.length * stake;
-    const payout = bets.reduce((sum, b) => sum + (b.hit ? b.odds * stake : 0), 0);
+    const investment = bets.length * stake;
+    const payout = bets.reduce(
+      (sum, b) => sum + (b.hit ? b.odds * stake : 0),
+      0
+    );
     const profit = payout - investment;
     const roi = investment > 0 ? (payout / investment) * 100 : 0;
     const hitCount = bets.filter((b) => b.hit).length;
@@ -194,7 +212,9 @@ if (!odds) continue;
       const roi = investment > 0 ? (payout / investment) * 100 : 0;
       const hitCount = comparisonBets.filter((b) => b.hit).length;
       const hitRate =
-        comparisonBets.length > 0 ? (hitCount / comparisonBets.length) * 100 : 0;
+        comparisonBets.length > 0
+          ? (hitCount / comparisonBets.length) * 100
+          : 0;
 
       return {
         threshold,
@@ -229,8 +249,7 @@ if (!odds) continue;
         background: "#f5f7fb",
         padding: "32px",
         color: "#111827",
-        fontFamily:
-          '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
       }}
     >
       <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
@@ -250,48 +269,12 @@ if (!odds) continue;
             marginBottom: "24px",
           }}
         >
-          <h2 style={{ fontSize: "18px", marginBottom: "16px" }}>
-            購入条件
-          </h2>
+          <h2 style={{ fontSize: "18px", marginBottom: "16px" }}>購入条件</h2>
 
-          <div
-            style={{
-              display: "flex",
-              gap: "20px",
-              flexWrap: "wrap",
-            }}
-          >
+          <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
+            <DateInput label="開始日" value={startDate} onChange={setStartDate} />
+            <DateInput label="終了日" value={endDate} onChange={setEndDate} />
 
-            <label style={{ fontWeight: 600 }}>
-  開始日
-  <br />
-  <input
-    type="date"
-    value={startDate}
-    onChange={(e) => {
-
-  setStartDate(e.target.value);
-}}
-  />
-</label>
-
-<label style={{ fontWeight: 600 }}>
-  終了日
-  <br />
-  <input
-    type="date"
-    value={endDate}
-    onChange={(e) => setEndDate(e.target.value)}
-    style={{
-      marginTop: "6px",
-      padding: "10px",
-      width: "150px",
-      borderRadius: "8px",
-      border: "1px solid #d1d5db",
-    }}
-  />
-</label>
-            
             {[
               ["EV閾値", evThreshold, setEvThreshold, 0.05],
               ["最低オッズ", minOdds, setMinOdds, 0.1],
@@ -309,17 +292,22 @@ if (!odds) continue;
                       Number(e.target.value)
                     )
                   }
-                  style={{
-                    marginTop: "6px",
-                    padding: "10px",
-                    width: "130px",
-                    borderRadius: "8px",
-                    border: "1px solid #d1d5db",
-                  }}
+                  style={inputStyle}
                 />
               </label>
             ))}
           </div>
+
+          {isLoading && (
+            <p style={{ marginTop: "16px", color: "#2563eb", fontWeight: 600 }}>
+              データ取得中です。期間が長い場合は時間がかかります。
+            </p>
+          )}
+          {errorMessage && (
+            <p style={{ marginTop: "16px", color: "#b91c1c", fontWeight: 600 }}>
+              {errorMessage}
+            </p>
+          )}
         </section>
 
         <section
@@ -340,28 +328,7 @@ if (!odds) continue;
             ["投資額", yen(result.investment)],
             ["払戻額", yen(result.payout)],
           ].map(([label, value]) => (
-            <div
-              key={String(label)}
-              style={{
-                background: "#ffffff",
-                padding: "18px",
-                borderRadius: "14px",
-                boxShadow: "0 8px 24px rgba(15, 23, 42, 0.08)",
-              }}
-            >
-              <div style={{ color: "#6b7280", fontSize: "13px" }}>
-                {String(label)}
-              </div>
-              <div
-                style={{
-                  fontSize: "24px",
-                  fontWeight: 700,
-                  marginTop: "6px",
-                }}
-              >
-                {String(value)}
-              </div>
-            </div>
+            <SummaryCard key={String(label)} label={String(label)} value={String(value)} />
           ))}
 
           <div
@@ -387,194 +354,202 @@ if (!odds) continue;
           </div>
         </section>
 
-        <section
-  style={{
-    background: "#ffffff",
-    padding: "20px",
-    borderRadius: "14px",
-    boxShadow: "0 8px 24px rgba(15, 23, 42, 0.08)",
-    marginBottom: "24px",
-    overflowX: "auto",
-  }}
->
-  <h2 style={{ fontSize: "20px", marginBottom: "16px" }}>
-    EV別バックテスト比較
-  </h2>
+        <section style={sectionStyle}>
+          <h2 style={{ fontSize: "20px", marginBottom: "16px" }}>
+            EV別バックテスト比較
+          </h2>
 
-  <table
-    style={{
-      width: "100%",
-      borderCollapse: "collapse",
-      fontSize: "14px",
-    }}
-  >
-    <thead>
-      <tr style={{ background: "#f9fafb" }}>
-        <Th>EV条件</Th>
-        <Th>購入点数</Th>
-        <Th>的中数</Th>
-        <Th>的中率</Th>
-        <Th>投資額</Th>
-        <Th>払戻額</Th>
-        <Th>収支</Th>
-        <Th>ROI</Th>
-      </tr>
-    </thead>
-    <tbody>
-      {result.evComparisons.map((row) => (
-        <tr key={row.threshold}>
-          <Td>EV &gt;= {row.threshold.toFixed(2)}</Td>
-          <Td>{row.betCount}</Td>
-          <Td>{row.hitCount}</Td>
-          <Td>{row.hitRate.toFixed(1)}%</Td>
-          <Td>{yen(row.investment)}</Td>
-          <Td>{yen(row.payout)}</Td>
-          <Td>
-            {row.profit >= 0 ? "+" : ""}
-            {yen(row.profit)}
-          </Td>
-          <Td>{row.roi.toFixed(1)}%</Td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</section>
+          <table style={tableStyle}>
+            <thead>
+              <tr style={{ background: "#f9fafb" }}>
+                <Th>EV条件</Th>
+                <Th>購入点数</Th>
+                <Th>的中数</Th>
+                <Th>的中率</Th>
+                <Th>投資額</Th>
+                <Th>払戻額</Th>
+                <Th>収支</Th>
+                <Th>ROI</Th>
+              </tr>
+            </thead>
+            <tbody>
+              {result.evComparisons.map((row) => (
+                <tr key={row.threshold}>
+                  <Td>EV &gt;= {row.threshold.toFixed(2)}</Td>
+                  <Td>{row.betCount}</Td>
+                  <Td>{row.hitCount}</Td>
+                  <Td>{row.hitRate.toFixed(1)}%</Td>
+                  <Td>{yen(row.investment)}</Td>
+                  <Td>{yen(row.payout)}</Td>
+                  <Td>
+                    {row.profit >= 0 ? "+" : ""}
+                    {yen(row.profit)}
+                  </Td>
+                  <Td>{row.roi.toFixed(1)}%</Td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
 
-        <section
-  style={{
-    background: "#ffffff",
-    padding: "20px",
-    borderRadius: "14px",
-    boxShadow: "0 8px 24px rgba(15, 23, 42, 0.08)",
-    marginBottom: "24px",
-  }}
->
-  <h2 style={{ fontSize: "20px", marginBottom: "16px" }}>
-    レース詳細
-  </h2>
+        <section style={sectionStyle}>
+          <h2 style={{ fontSize: "20px", marginBottom: "16px" }}>レース詳細</h2>
 
-  {races.map((race) => (
-    <div
-      key={race.raceId}
-      style={{
-        border: "1px solid #e5e7eb",
-        borderRadius: "12px",
-        padding: "16px",
-        marginBottom: "16px",
-      }}
-    >
-      <h3 style={{ fontSize: "18px", marginBottom: "8px" }}>
-        {race.date} / {race.venueName} {race.raceNo}R
-      </h3>
+          <button
+            onClick={() => setShowRaceDetails((prev) => !prev)}
+            style={buttonStyle}
+          >
+            {showRaceDetails ? "レース詳細を閉じる" : "レース詳細を表示（先頭50件）"}
+          </button>
 
-      <p>結果：{race.result}</p>
-      <p>
-  2連単払戻：
-  ¥{Number(race.payout ?? 0).toLocaleString()}
-</p>
+          {showRaceDetails &&
+            races.slice(0, 50).map((race) => (
+              <div
+                key={race.raceId}
+                style={{
+                  border: "1px solid #e5e7eb",
+                  borderRadius: "12px",
+                  padding: "16px",
+                  marginTop: "16px",
+                }}
+              >
+                <h3 style={{ fontSize: "18px", marginBottom: "8px" }}>
+                  {race.date} / {race.venueName} {race.raceNo}R
+                </h3>
 
-      <table
-        style={{
-          width: "100%",
-          borderCollapse: "collapse",
-          marginTop: "12px",
-          fontSize: "14px",
-        }}
-      >
-        <thead>
-          <tr style={{ background: "#f9fafb" }}>
-            <Th>枠</Th>
-            <Th>選手名</Th>
-            <Th>全国勝率</Th>
-            <Th>当地勝率</Th>
-            <Th>平均ST</Th>
-            <Th>モーター</Th>
-            <Th>モーター2連率</Th>
-            <Th>ボート</Th>
-            <Th>ボート2連率</Th>
-          </tr>
-        </thead>
-        <tbody>
-          {race.racers.map((racer) => (
-            <tr key={`${race.raceId}-${racer.lane}`}>
-              <Td>{racer.lane}</Td>
-              <Td>{racer.racerName}</Td>
-              <Td>{racer.winRate.toFixed(2)}</Td>
-              <Td>{racer.localWinRate.toFixed(2)}</Td>
-              <Td>{racer.averageStart.toFixed(2)}</Td>
-              <Td>{racer.motorNo}</Td>
-              <Td>{racer.motorRate.toFixed(1)}%</Td>
-              <Td>{racer.boatNo}</Td>
-              <Td>{racer.boatRate.toFixed(1)}%</Td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  ))}
-</section>
+                <p>結果：{race.result}</p>
+                <p>2連単払戻：{yen(race.payout)}</p>
 
-        <section
-  style={{
-    background: "#ffffff",
-    padding: "20px",
-    borderRadius: "14px",
-    boxShadow: "0 8px 24px rgba(15, 23, 42, 0.08)",
-    marginBottom: "24px",
-    overflowX: "auto",
-  }}
->
-  <h2 style={{ fontSize: "20px", marginBottom: "16px" }}>
-    公式取得データ（蒲郡 2026-06-09）
-  </h2>
+                <table style={{ ...tableStyle, marginTop: "12px" }}>
+                  <thead>
+                    <tr style={{ background: "#f9fafb" }}>
+                      <Th>枠</Th>
+                      <Th>選手名</Th>
+                      <Th>全国勝率</Th>
+                      <Th>当地勝率</Th>
+                      <Th>平均ST</Th>
+                      <Th>モーター</Th>
+                      <Th>モーター2連率</Th>
+                      <Th>ボート</Th>
+                      <Th>ボート2連率</Th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {race.racers.map((racer) => (
+                      <tr key={`${race.raceId}-${racer.lane}`}>
+                        <Td>{racer.lane}</Td>
+                        <Td>{racer.racerName}</Td>
+                        <Td>{racer.winRate.toFixed(2)}</Td>
+                        <Td>{racer.localWinRate.toFixed(2)}</Td>
+                        <Td>{racer.averageStart.toFixed(2)}</Td>
+                        <Td>{racer.motorNo}</Td>
+                        <Td>{racer.motorRate.toFixed(1)}%</Td>
+                        <Td>{racer.boatNo}</Td>
+                        <Td>{racer.boatRate.toFixed(1)}%</Td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ))}
+        </section>
 
-  <table
-    style={{
-      width: "100%",
-      borderCollapse: "collapse",
-      fontSize: "14px",
-    }}
-  >
-    <thead>
-      <tr style={{ background: "#f9fafb" }}>
-        <Th>日付</Th>
-        <Th>場名</Th>
-        <Th>R</Th>
-        <Th>2連単結果</Th>
-        <Th>払戻</Th>
-      </tr>
-    </thead>
-    <tbody>
-      {officialRaces.map((race) => (
-        <tr key={race.raceId}>
-          <Td>{race.date}</Td>
-          <Td>{race.venueName}</Td>
-          <Td>{race.raceNo}R</Td>
-          <Td>{race.result ?? "-"}</Td>
-          <Td>
-            {race.payout != null
-  ? `¥${Number(race.payout).toLocaleString()}`
-  : "-"}
-          </Td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</section>
-        
-        <Table
-          title="購入対象"
-          rows={result.bets}
-          showResult
-        />
+        <section style={sectionStyle}>
+          <h2 style={{ fontSize: "20px", marginBottom: "16px" }}>
+            公式取得データ
+          </h2>
 
-        <Table
-          title="見送り買い目"
-          rows={result.skippedBets}
-          showReason
-        />
+          <button
+            onClick={() => setShowOfficialData((prev) => !prev)}
+            style={buttonStyle}
+          >
+            {showOfficialData ? "公式取得データを閉じる" : "公式取得データを表示（先頭100件）"}
+          </button>
+
+          {showOfficialData && (
+            <table style={{ ...tableStyle, marginTop: "16px" }}>
+              <thead>
+                <tr style={{ background: "#f9fafb" }}>
+                  <Th>日付</Th>
+                  <Th>場名</Th>
+                  <Th>R</Th>
+                  <Th>2連単結果</Th>
+                  <Th>払戻</Th>
+                </tr>
+              </thead>
+              <tbody>
+                {races.slice(0, 100).map((race) => (
+                  <tr key={race.raceId}>
+                    <Td>{race.date}</Td>
+                    <Td>{race.venueName}</Td>
+                    <Td>{race.raceNo}R</Td>
+                    <Td>{race.result ?? "-"}</Td>
+                    <Td>{race.payout != null ? yen(race.payout) : "-"}</Td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </section>
+
+        <Table title="購入対象" rows={result.bets.slice(0, 300)} showResult />
+
+        <section style={sectionStyle}>
+          <h2 style={{ fontSize: "20px", marginBottom: "16px" }}>見送り買い目</h2>
+          <button
+            onClick={() => setShowSkippedBets((prev) => !prev)}
+            style={buttonStyle}
+          >
+            {showSkippedBets ? "見送り買い目を閉じる" : "見送り買い目を表示（先頭300件）"}
+          </button>
+
+          {showSkippedBets && (
+            <TableContent rows={result.skippedBets.slice(0, 300)} showReason />
+          )}
+        </section>
       </div>
     </main>
+  );
+}
+
+function DateInput({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <label style={{ fontWeight: 600 }}>
+      {label}
+      <br />
+      <input
+        type="date"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        style={inputStyle}
+      />
+    </label>
+  );
+}
+
+function SummaryCard({ label, value }: { label: string; value: string }) {
+  return (
+    <div
+      style={{
+        background: "#ffffff",
+        padding: "18px",
+        borderRadius: "14px",
+        boxShadow: "0 8px 24px rgba(15, 23, 42, 0.08)",
+      }}
+    >
+      <div style={{ color: "#6b7280", fontSize: "13px" }}>{label}</div>
+      <div style={{ fontSize: "24px", fontWeight: 700, marginTop: "6px" }}>
+        {value}
+      </div>
+    </div>
   );
 }
 
@@ -590,66 +565,64 @@ function Table({
   showReason?: boolean;
 }) {
   return (
-    <section
-      style={{
-        background: "#ffffff",
-        padding: "20px",
-        borderRadius: "14px",
-        boxShadow: "0 8px 24px rgba(15, 23, 42, 0.08)",
-        marginBottom: "24px",
-        overflowX: "auto",
-      }}
-    >
+    <section style={sectionStyle}>
       <h2 style={{ fontSize: "20px", marginBottom: "16px" }}>{title}</h2>
-
-      <table
-        style={{
-          width: "100%",
-          borderCollapse: "collapse",
-          fontSize: "14px",
-        }}
-      >
-        <thead>
-          <tr style={{ background: "#f9fafb" }}>
-            <Th>レース</Th>
-            <Th>買い目</Th>
-            <Th>予測確率</Th>
-            <Th>オッズ</Th>
-            <Th>EV</Th>
-            {showResult && <Th>結果</Th>}
-            {showResult && <Th>判定</Th>}
-            {showReason && <Th>見送り理由</Th>}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((b) => (
-            <tr key={`${title}-${b.race}-${b.bet}`}>
-              <Td>{b.race}</Td>
-              <Td>
-                <strong>{b.bet}</strong>
-              </Td>
-              <Td>{(b.probability * 100).toFixed(2)}%</Td>
-              <Td>{b.odds.toFixed(1)}倍</Td>
-              <Td>{b.ev.toFixed(2)}</Td>
-              {showResult && <Td>{b.result}</Td>}
-              {showResult && (
-                <Td>
-                  <span
-                    style={{
-                      color: b.hit ? "#047857" : "#b91c1c",
-                      fontWeight: 700,
-                    }}
-                  >
-                    {b.hit ? "的中" : "不的中"}
-                  </span>
-                </Td>
-              )}
-              {showReason && <Td>{b.reason}</Td>}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <TableContent rows={rows} showResult={showResult} showReason={showReason} />
     </section>
+  );
+}
+
+function TableContent({
+  rows,
+  showResult,
+  showReason,
+}: {
+  rows: Array<BetResult & { reason?: string }>;
+  showResult?: boolean;
+  showReason?: boolean;
+}) {
+  return (
+    <table style={tableStyle}>
+      <thead>
+        <tr style={{ background: "#f9fafb" }}>
+          <Th>レース</Th>
+          <Th>買い目</Th>
+          <Th>予測確率</Th>
+          <Th>オッズ</Th>
+          <Th>EV</Th>
+          {showResult && <Th>結果</Th>}
+          {showResult && <Th>判定</Th>}
+          {showReason && <Th>見送り理由</Th>}
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((b, index) => (
+          <tr key={`${b.race}-${b.bet}-${index}`}>
+            <Td>{b.race}</Td>
+            <Td>
+              <strong>{b.bet}</strong>
+            </Td>
+            <Td>{(b.probability * 100).toFixed(2)}%</Td>
+            <Td>{b.odds.toFixed(1)}倍</Td>
+            <Td>{b.ev.toFixed(2)}</Td>
+            {showResult && <Td>{b.result}</Td>}
+            {showResult && (
+              <Td>
+                <span
+                  style={{
+                    color: b.hit ? "#047857" : "#b91c1c",
+                    fontWeight: 700,
+                  }}
+                >
+                  {b.hit ? "的中" : "不的中"}
+                </span>
+              </Td>
+            )}
+            {showReason && <Td>{b.reason}</Td>}
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 }
 
@@ -681,3 +654,35 @@ function Td({ children }: { children: React.ReactNode }) {
     </td>
   );
 }
+
+const inputStyle: React.CSSProperties = {
+  marginTop: "6px",
+  padding: "10px",
+  width: "150px",
+  borderRadius: "8px",
+  border: "1px solid #d1d5db",
+};
+
+const sectionStyle: React.CSSProperties = {
+  background: "#ffffff",
+  padding: "20px",
+  borderRadius: "14px",
+  boxShadow: "0 8px 24px rgba(15, 23, 42, 0.08)",
+  marginBottom: "24px",
+  overflowX: "auto",
+};
+
+const tableStyle: React.CSSProperties = {
+  width: "100%",
+  borderCollapse: "collapse",
+  fontSize: "14px",
+};
+
+const buttonStyle: React.CSSProperties = {
+  padding: "8px 16px",
+  borderRadius: "8px",
+  border: "1px solid #d1d5db",
+  background: "#ffffff",
+  cursor: "pointer",
+  fontWeight: 600,
+};
