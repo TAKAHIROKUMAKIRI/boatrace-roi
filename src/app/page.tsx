@@ -115,16 +115,20 @@ export default function Home() {
 
       for (const date of dates) {
         const cacheKey = `boatrace-${date}`;
-        const cached = localStorage.getItem(cacheKey);
+const cached = localStorage.getItem(cacheKey);
 
-        if (cached) {
-          allRaces.push(...JSON.parse(cached));
-          continue;
-        }
+if (cached) {
+  console.log("CACHE HIT", date);
 
-        const res = await fetch(
-          `/api/boatrace?mode=backtest&startDate=${date}&endDate=${date}`
-        );
+  allRaces.push(...JSON.parse(cached));
+  continue;
+}
+
+console.log("FETCH", date);
+
+const res = await fetch(
+  `/api/boatrace?mode=backtest&startDate=${date}&endDate=${date}`
+);
 
         if (!res.ok) {
           throw new Error(`API error ${res.status}`);
