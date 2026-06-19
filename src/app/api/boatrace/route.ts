@@ -207,29 +207,19 @@ async function getSingleRace(date: string, jcd: string, rno: string) {
     raceListPage.text.includes("見つかりませんでした");
 
   return {
-    raceId: `${date}-${jcd}-${rno}`,
-    date,
-    venueCode: jcd,
-    venueName,
-    raceNo: Number(rno),
-    race: `${venueName} ${rno}R`,
-    isErrorPage,
+  raceId: `${date}-${jcd}-${rno}`,
+  date,
+  venueCode: jcd,
+  venueName,
+  raceNo: Number(rno),
+  race: `${venueName} ${rno}R`,
 
-    result: result.result,
-    payout: result.payout,
+  result: result.result,
+  payout: result.payout,
 
-    odds,
-    racers,
-
-    debugSnippet: result.debugSnippet,
-
-    sourceUrls: {
-      beforeInfo: beforeInfoUrl,
-      racelist: racelistUrl,
-      result: resultUrl,
-      odds: oddsUrl,
-    },
-  };
+  odds,
+  racers,
+};
 }
 
 function yyyymmddToDate(value: string) {
