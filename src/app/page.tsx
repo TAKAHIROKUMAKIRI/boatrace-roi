@@ -150,7 +150,7 @@ const compactRaces = racesForDate.map((r: any) => ({
   racers: r.racers,
 }));
 
-localStorage.setItem(cacheKey, JSON.stringify(compactRaces));
+//localStorage.setItem(cacheKey, JSON.stringify(compactRaces));
 allRaces.push(...compactRaces);
       }
 
