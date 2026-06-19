@@ -107,7 +107,7 @@ export default function Home() {
     setIsLoading(true);
     setErrorMessage("");
     setRaces([]);
-    setOfficialRaces([]);
+
 
     try {
       const dates = getDates(startDate, endDate);
@@ -137,12 +137,11 @@ export default function Home() {
         allRaces.push(...racesForDate);
       }
 
-      setOfficialRaces(allRaces);
+
       setRaces(allRaces);
     } catch (error) {
       console.error(error);
       setErrorMessage("データ取得に失敗しました。期間を短くして再実行してください。");
-      setOfficialRaces([]);
       setRaces([]);
     } finally {
       setIsLoading(false);
