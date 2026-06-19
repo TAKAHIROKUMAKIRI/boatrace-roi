@@ -134,13 +134,25 @@ const res = await fetch(
           throw new Error(`API error ${res.status}`);
         }
 
-        const data = await res.json();
-        const racesForDate = Array.isArray(data.races) ? data.races : [];
+       const data = await res.json();
+const racesForDate = Array.isArray(data.races) ? data.races : [];
 
-        localStorage.setItem(cacheKey, JSON.stringify(racesForDate));
-        allRaces.push(...racesForDate);
+const compactRaces = racesForDate.map((r: any) => ({
+  raceId: r.raceId,
+  date: r.date,
+  venueCode: r.venueCode,
+  venueName: r.venueName,
+  raceNo: r.raceNo,
+  race: r.race,
+  result: r.result,
+  payout: r.payout,
+  odds: r.odds,
+  racers: r.racers,
+}));
+
+localStorage.setItem(cacheKey, JSON.stringify(compactRaces));
+allRaces.push(...compactRaces);
       }
-
 
       setRaces(allRaces);
     } catch (error) {
