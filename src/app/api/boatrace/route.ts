@@ -323,7 +323,11 @@ for (
   }
 }
 
-const allRaces = await Promise.all(raceTasks);
+const allRacesRaw = await Promise.allSettled(raceTasks);
+
+const allRaces = allRacesRaw
+  .filter((r) => r.status === "fulfilled")
+  .map((r) => r.value);
 
 return NextResponse.json({
   ok: true,
