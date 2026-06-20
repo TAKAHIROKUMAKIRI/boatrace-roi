@@ -181,6 +181,17 @@ allRaces.push(...compactRaces);
 
       const predictions = predictExacta(race.racers);
 
+      const probabilitySum = predictions.reduce(
+  (sum, p) => sum + p.probability,
+  0
+);
+
+console.log(
+  "PROBABILITY SUM",
+  race.race,
+  probabilitySum.toFixed(4)
+);
+
       for (const prediction of predictions) {
         const odds = race.odds?.[prediction.bet];
         if (!odds) continue;
