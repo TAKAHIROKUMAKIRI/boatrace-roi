@@ -180,6 +180,10 @@ allRaces.push(...compactRaces);
       }
 
       const predictions = predictExacta(race.racers);
+      console.log(
+  race.race,
+  predictions.slice(0, 5)
+);
 
       const probabilitySum = predictions.reduce(
   (sum, p) => sum + p.probability,
