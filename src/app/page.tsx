@@ -231,6 +231,11 @@ console.log(
       raceBets.sort((a, b) => b.ev - a.ev).slice(0, 3)
     );
 
+    console.log(
+  "TOP BETS",
+  bets.slice(0, 20)
+);
+
     const investment = bets.length * stake;
     const payout = bets.reduce(
       (sum, b) => sum + (b.hit ? b.odds * stake : 0),
