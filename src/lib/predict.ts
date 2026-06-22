@@ -38,10 +38,30 @@ function racerScore(racer: Racer) {
 }
 
 export function predictExacta(racers: Racer[]): Prediction[] {
-  const scores = racers.map((r) => ({
-    ...r,
-    score: racerScore(r),
-  }));
+  const firstLaneBonus: Record<number, number> = {
+  1: 2.2,
+  2: 1.25,
+  3: 1.0,
+  4: 0.85,
+  5: 0.55,
+  6: 0.35,
+};
+
+const secondLaneBonus: Record<number, number> = {
+  1: 1.0,
+  2: 1.2,
+  3: 1.1,
+  4: 1.0,
+  5: 0.8,
+  6: 0.6,
+};
+
+const scores = racers.map((r) => ({
+  ...r,
+  baseScore: racerScore(r),
+  firstScore: racerScore(r) * firstLaneBonus[r.lane],
+  secondScore: racerScore(r) * secondLaneBonus[r.lane],
+}));
 
   const combinations: Prediction[] = [];
 
@@ -50,11 +70,14 @@ export function predictExacta(racers: Racer[]): Prediction[] {
       if (first.lane === second.lane) continue;
 
       const firstProb =
-        first.score / scores.reduce((sum, r) => sum + r.score, 0);
+  first.firstScore /
+  scores.reduce((sum, r) => sum + r.firstScore, 0);
 
-      const remaining = scores.filter((r) => r.lane !== first.lane);
-      const secondProb =
-        second.score / remaining.reduce((sum, r) => sum + r.score, 0);
+const remaining = scores.filter((r) => r.lane !== first.lane);
+
+const secondProb =
+  second.secondScore /
+  remaining.reduce((sum, r) => sum + r.secondScore, 0);
 
       combinations.push({
         bet: `${first.lane}-${second.lane}`,
