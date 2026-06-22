@@ -175,26 +175,24 @@ allRaces.push(...compactRaces);
     }
 
     for (const race of races) {
-      if (!race.racers || race.racers.length !== 6 || !race.odds) {
-        continue;
-      }
+  if (!race.racers || race.racers.length !== 6 || !race.odds) {
+    continue;
+  }
 
-      const predictions = predictExacta(race.racers);
-      console.log(
-  race.race,
-  predictions.slice(0, 5)
-);
+  const predictions = predictExacta(race.racers);
 
-      const probabilitySum = predictions.reduce(
-  (sum, p) => sum + p.probability,
-  0
-);
+  const hitPrediction = predictions.find(
+    (p) => p.bet === race.result
+  );
 
-console.log(
-  "PROBABILITY SUM",
-  race.race,
-  probabilitySum.toFixed(4)
-);
+  if (hitPrediction) {
+    console.log(
+      "ACTUAL HIT",
+      race.race,
+      race.result,
+      hitPrediction.probability
+    );
+  }
 
       for (const prediction of predictions) {
         const odds = race.odds?.[prediction.bet];
@@ -228,12 +226,17 @@ console.log(
     );
 
     const bets = Object.values(raceGroups).flatMap((raceBets) =>
-      raceBets.sort((a, b) => b.ev - a.ev).slice(0, 3)
-    );
+  raceBets.sort((a, b) => b.ev - a.ev).slice(0, 3)
+);
 
-    console.log(
+console.log(
   "TOP BETS",
-  bets.slice(0, 20)
+  bets.slice(0, 20).map((b) => ({
+    bet: b.bet,
+    probability: b.probability,
+    odds: b.odds,
+    ev: b.ev,
+  }))
 );
 
     const investment = bets.length * stake;
