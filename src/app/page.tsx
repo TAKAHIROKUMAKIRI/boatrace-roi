@@ -304,9 +304,13 @@ allRaces.push(...compactRaces);
 
       const investment = comparisonBets.length * stake;
       const payout = comparisonBets.reduce(
-        (sum, b) => sum + (b.hit ? b.odds * stake : 0),
-        0
-      );
+  (sum, b) =>
+    sum +
+    (b.hit
+      ? ((b.payout ?? 0) / 100) * stake
+      : 0),
+  0
+);
       const profit = payout - investment;
       const roi = investment > 0 ? (payout / investment) * 100 : 0;
       const hitCount = comparisonBets.filter((b) => b.hit).length;
