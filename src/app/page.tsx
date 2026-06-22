@@ -248,6 +248,26 @@ allRaces.push(...compactRaces);
         
 
     const investment = bets.length * stake;
+
+    console.log(
+  "PAYOUT CHECK",
+  bets
+    .filter((b) => b.hit)
+    .slice(0, 20)
+    .map((b) => {
+      const raceData = races.find(
+        (r) => r.race === b.race
+      );
+
+      return {
+        race: b.race,
+        bet: b.bet,
+        odds: b.odds,
+        payout: raceData?.payout,
+      };
+    })
+);
+    
     const payout = bets.reduce(
       (sum, b) => sum + (b.hit ? b.odds * stake : 0),
       0
