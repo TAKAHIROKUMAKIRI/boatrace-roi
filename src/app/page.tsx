@@ -215,6 +215,16 @@ allRaces.push(...compactRaces);
       }
     }
 
+    console.log(
+  "EV SAMPLE",
+  allBets.slice(0, 20).map((b) => ({
+    bet: b.bet,
+    probability: b.probability,
+    odds: b.odds,
+    ev: b.ev,
+  }))
+);
+    
     const filteredBets = allBets.filter(
       (b) => b.ev >= evThreshold && b.odds >= minOdds && b.odds <= maxOdds
     );
