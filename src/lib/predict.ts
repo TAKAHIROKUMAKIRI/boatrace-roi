@@ -25,15 +25,16 @@ const laneBonus: Record<number, number> = {
 };
 
 function racerScore(racer: Racer) {
-  const startScore = Math.max(0, 0.25 - racer.averageStart) * 20;
+  const startScore =
+    Math.max(0, 0.25 - racer.averageStart) * 8;
 
   return (
-    racer.winRate * 1.8 +
-    racer.localWinRate * 1.2 +
-    racer.motorRate * 0.08 +
-    racer.boatRate * 0.04 +
+    racer.winRate * 1.0 +
+    racer.localWinRate * 0.5 +
+    racer.motorRate * 0.03 +
+    racer.boatRate * 0.02 +
     startScore
-  ) * laneBonus[racer.lane];
+  );
 }
 
 export function predictExacta(racers: Racer[]): Prediction[] {
