@@ -225,25 +225,27 @@ allRaces.push(...compactRaces);
       {}
     );
 
+    console.log(
+  "RACE GROUPS",
+  Object.values(raceGroups)
+    .slice(0, 20)
+    .map((g) => ({
+      race: g[0].race,
+      count: g.length,
+    }))
+);
+    
     const bets = Object.values(raceGroups).flatMap((raceBets) =>
   raceBets.sort((a, b) => b.ev - a.ev).slice(0, 3)
 );
 
     console.log(
-  "HITS",
-  bets
-    .filter((b) => b.hit)
-    .slice(0, 20)
-    .map((b) => ({
-      race: b.race,
-      bet: b.bet,
-      probability: b.probability,
-      odds: b.odds,
-      ev: b.ev,
-      result: b.result,
-    }))
+  "AVG BETS PER RACE",
+  bets.length,
+  Object.keys(raceGroups).length,
+  bets.length / Object.keys(raceGroups).length
 );
-    
+        
 
     const investment = bets.length * stake;
     const payout = bets.reduce(
