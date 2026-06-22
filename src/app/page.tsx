@@ -22,8 +22,10 @@ type BetResult = {
   probability: number;
   odds: number;
   ev: number;
-  result: string;
+  payout?: number | null;
+  result?: string | null;
   hit: boolean;
+  reason?: string;
 };
 
 type EvComparison = {
@@ -201,14 +203,15 @@ allRaces.push(...compactRaces);
         const ev = prediction.probability * odds;
 
         allBets.push({
-          race: race.race,
-          bet: prediction.bet,
-          probability: prediction.probability,
-          odds,
-          ev,
-          result: race.result,
-          hit: prediction.bet === race.result,
-        });
+  race: race.race,
+  bet: prediction.bet,
+  probability: prediction.probability,
+  odds,
+  ev,
+  payout: race.payout,
+  result: race.result,
+  hit: prediction.bet === race.result,
+});
       }
     }
 
@@ -269,9 +272,13 @@ allRaces.push(...compactRaces);
 );
     
     const payout = bets.reduce(
-      (sum, b) => sum + (b.hit ? b.odds * stake : 0),
-      0
-    );
+  (sum, b) =>
+    sum +
+    (b.hit
+      ? ((b.payout ?? 0) / 100) * stake
+      : 0),
+  0
+);
     const profit = payout - investment;
     const roi = investment > 0 ? (payout / investment) * 100 : 0;
     const hitCount = bets.filter((b) => b.hit).length;
