@@ -284,7 +284,17 @@ allRaces.push(...compactRaces);
     const hitCount = bets.filter((b) => b.hit).length;
     const hitRate = bets.length > 0 ? (hitCount / bets.length) * 100 : 0;
 
+console.log(
+  "WINNER",
+  bets.reduce((acc, b) => {
+    const first = b.bet.split("-")[0];
 
+    acc[first] = (acc[first] || 0) + 1;
+
+    return acc;
+  }, {} as Record<string, number>)
+);
+    
     const skippedBets: Array<BetResult & { reason: string }> = [];
 
     const evComparisons = [1.05, 1.1, 1.15, 1.2, 1.3].map((threshold) => {
