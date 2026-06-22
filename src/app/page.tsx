@@ -229,15 +229,21 @@ allRaces.push(...compactRaces);
   raceBets.sort((a, b) => b.ev - a.ev).slice(0, 3)
 );
 
-console.log(
-  "TOP BETS",
-  bets.slice(0, 20).map((b) => ({
-    bet: b.bet,
-    probability: b.probability,
-    odds: b.odds,
-    ev: b.ev,
-  }))
+    console.log(
+  "HITS",
+  bets
+    .filter((b) => b.hit)
+    .slice(0, 20)
+    .map((b) => ({
+      race: b.race,
+      bet: b.bet,
+      probability: b.probability,
+      odds: b.odds,
+      ev: b.ev,
+      result: b.result,
+    }))
 );
+    
 
     const investment = bets.length * stake;
     const payout = bets.reduce(
