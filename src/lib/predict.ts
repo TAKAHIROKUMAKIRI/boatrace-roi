@@ -29,12 +29,12 @@ function racerScore(racer: Racer) {
     Math.max(0, 0.25 - racer.averageStart) * 10;
 
   return (
-    racer.winRate * 1.2 +
-    racer.localWinRate * 0.6 +
-    racer.motorRate * 0.04 +
-    racer.boatRate * 0.02 +
-    startScore
-  );
+  racer.winRate * 1.6 +
+  racer.localWinRate * 1.0 +
+  racer.motorRate * 0.18 +
+  racer.boatRate * 0.08 +
+  startScore * 1.5
+);
 }
 
 export function predictExacta(racers: Racer[]): Prediction[] {
