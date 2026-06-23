@@ -67,7 +67,9 @@ const scores = racers.map((r) => ({
   "SCORE SAMPLE",
   scores.map((s) => ({
     lane: s.lane,
-    score: s.score,
+    baseScore: s.baseScore,
+    firstScore: s.firstScore,
+    secondScore: s.secondScore,
     winRate: s.winRate,
     localWinRate: s.localWinRate,
     motorRate: s.motorRate,
