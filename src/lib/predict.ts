@@ -34,7 +34,7 @@ function racerScore(racer: Racer) {
     racer.motorRate * 0.04 +
     racer.boatRate * 0.02 +
     startScore
-  ) * laneBonus[racer.lane];
+  );
 }
 
 export function predictExacta(racers: Racer[]): Prediction[] {
