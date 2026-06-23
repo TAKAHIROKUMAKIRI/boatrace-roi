@@ -230,7 +230,7 @@ allRaces.push(...compactRaces);
 );
     
     const bets = Object.values(raceGroups).flatMap((raceBets) =>
-  raceBets.sort((a, b) => b.ev - a.ev).slice(0, 3)
+  raceBets.sort((a, b) => b.ev - a.ev).slice(0, 2)
 );
 
     console.log(
