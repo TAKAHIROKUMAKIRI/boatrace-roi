@@ -289,8 +289,8 @@ allRaces.push(...compactRaces);
       }, {});
 
       const comparisonBets = Object.values(groups).flatMap((raceBets) =>
-        raceBets.sort((a, b) => b.ev - a.ev).slice(0, 3)
-      );
+  raceBets.sort((a, b) => b.ev - a.ev).slice(0, 2)
+);
 
       const investment = comparisonBets.length * stake;
       const payout = comparisonBets.reduce(
