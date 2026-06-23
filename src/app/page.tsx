@@ -224,6 +224,12 @@ allRaces.push(...compactRaces);
     ev: b.ev,
   }))
 );
+
+    console.log(
+  "EV RANGE",
+  Math.min(...allBets.map(b => b.ev)),
+  Math.max(...allBets.map(b => b.ev))
+);
     
     const filteredBets = allBets.filter(
       (b) => b.ev >= evThreshold && b.odds >= minOdds && b.odds <= maxOdds
