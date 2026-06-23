@@ -65,7 +65,6 @@ const scores = racers.map((r) => ({
 
   console.log(
   "SCORE SAMPLE",
-  race.race,
   scores.map((s) => ({
     lane: s.lane,
     score: s.score,
