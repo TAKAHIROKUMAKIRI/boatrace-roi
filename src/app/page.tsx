@@ -187,15 +187,6 @@ allRaces.push(...compactRaces);
     (p) => p.bet === race.result
   );
 
-  if (hitPrediction) {
-    console.log(
-      "ACTUAL HIT",
-      race.race,
-      race.result,
-      hitPrediction.probability
-    );
-  }
-
       for (const prediction of predictions) {
         const odds = race.odds?.[prediction.bet];
         if (!odds) continue;
@@ -214,22 +205,6 @@ allRaces.push(...compactRaces);
 });
       }
     }
-
-    console.log(
-  "EV SAMPLE",
-  allBets.slice(0, 20).map((b) => ({
-    bet: b.bet,
-    probability: b.probability,
-    odds: b.odds,
-    ev: b.ev,
-  }))
-);
-
-    console.log(
-  "EV RANGE",
-  Math.min(...allBets.map(b => b.ev)),
-  Math.max(...allBets.map(b => b.ev))
-);
     
     const filteredBets = allBets.filter(
       (b) => b.ev >= evThreshold && b.odds >= minOdds && b.odds <= maxOdds
@@ -299,21 +274,10 @@ allRaces.push(...compactRaces);
     const roi = investment > 0 ? (payout / investment) * 100 : 0;
     const hitCount = bets.filter((b) => b.hit).length;
     const hitRate = bets.length > 0 ? (hitCount / bets.length) * 100 : 0;
-
-console.log(
-  "WINNER",
-  bets.reduce((acc, b) => {
-    const first = b.bet.split("-")[0];
-
-    acc[first] = (acc[first] || 0) + 1;
-
-    return acc;
-  }, {} as Record<string, number>)
-);
     
     const skippedBets: Array<BetResult & { reason: string }> = [];
 
-    const evComparisons = [1.05, 1.1, 1.15, 1.2, 1.3].map((threshold) => {
+    const evComparisons = [1.05, 1.3, 1.5, 2.0, 3.0, 5.0].map((threshold) => {
       const filtered = allBets.filter(
         (b) => b.ev >= threshold && b.odds >= minOdds && b.odds <= maxOdds
       );
