@@ -337,6 +337,15 @@ allRaces.push(...compactRaces);
   raceBets.sort((a, b) => b.ev - a.ev).slice(0, 1)
 );
 
+      console.log(
+  "ODDS SAMPLE",
+  comparisonBets.slice(0, 20).map((b) => ({
+    odds: b.odds,
+    ev: b.ev,
+    probability: b.probability,
+  }))
+);
+      
       const investment = comparisonBets.length * stake;
       const payout = comparisonBets.reduce(
   (sum, b) =>
