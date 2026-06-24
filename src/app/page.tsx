@@ -292,6 +292,16 @@ console.log(
   }))
 );
 
+    const missBets = bets.filter((b) => !b.hit);
+
+console.log(
+  "MISS WINNER",
+  missBets.slice(0, 50).map((b) => ({
+    bet: b.bet,
+    result: b.result,
+  }))
+);
+    
     console.log(
   "WINNER DIST",
   hitBets.reduce((acc, b) => {
