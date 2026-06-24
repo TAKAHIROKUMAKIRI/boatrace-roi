@@ -292,6 +292,17 @@ console.log(
   }))
 );
 
+    console.log(
+  "WINNER DIST",
+  hitBets.reduce((acc, b) => {
+    const winner = b.result.split("-")[0];
+
+    acc[winner] = (acc[winner] || 0) + 1;
+
+    return acc;
+  }, {} as Record<string, number>)
+);
+    
 console.log(
   "ALL SAMPLE",
   bets.slice(0, 20).map((b) => ({
