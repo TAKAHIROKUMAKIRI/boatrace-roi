@@ -65,6 +65,51 @@ const emptyResult: BacktestResult = {
   hitRate: 0,
 };
 
+const DB_NAME = "boatrace-cache-db";
+const STORE_NAME = "daily-races";
+
+function openRaceDb(): Promise<IDBDatabase> {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, 1);
+
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME);
+      }
+    };
+
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+async function readRaceCache(date: string): Promise<any[] | null> {
+  const db = await openRaceDb();
+
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, "readonly");
+    const store = tx.objectStore(STORE_NAME);
+    const request = store.get(date);
+
+    request.onsuccess = () => resolve(request.result ?? null);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+async function saveRaceCache(date: string, races: any[]) {
+  const db = await openRaceDb();
+
+  return new Promise<void>((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, "readwrite");
+    const store = tx.objectStore(STORE_NAME);
+    const request = store.put(races, date);
+
+    request.onsuccess = () => resolve();
+    request.onerror = () => reject(request.error);
+  });
+}
+
 export default function Home() {
   const [evThreshold, setEvThreshold] = useState(1.15);
   const [minOdds, setMinOdds] = useState(4);
@@ -117,12 +162,12 @@ export default function Home() {
 
       for (const date of dates) {
         const cacheKey = `boatrace-${date}`;
-const cached = localStorage.getItem(cacheKey);
+const cached = await readRaceCache(date);
 
 if (cached) {
   console.log("CACHE HIT", date);
 
-  allRaces.push(...JSON.parse(cached));
+  allRaces.push(...cached);
   continue;
 }
 
@@ -152,7 +197,7 @@ const compactRaces = racesForDate.map((r: any) => ({
   racers: r.racers,
 }));
 
-//localStorage.setItem(cacheKey, JSON.stringify(compactRaces));
+await saveRaceCache(date, compactRaces);
 allRaces.push(...compactRaces);
       }
 
