@@ -278,6 +278,31 @@ allRaces.push(...compactRaces);
   raceBets.sort((a, b) => b.ev - a.ev).slice(0, 1)
 );
 
+    const hitBets = bets.filter((b) => b.hit);
+
+console.log(
+  "HIT SAMPLE",
+  hitBets.slice(0, 20).map((b) => ({
+    race: b.race,
+    bet: b.bet,
+    result: b.result,
+    odds: b.odds,
+    ev: b.ev,
+    payout: b.payout,
+  }))
+);
+
+console.log(
+  "ALL SAMPLE",
+  bets.slice(0, 20).map((b) => ({
+    race: b.race,
+    bet: b.bet,
+    odds: b.odds,
+    ev: b.ev,
+    probability: b.probability,
+  }))
+);
+    
     console.log(
   "AVG BETS PER RACE",
   bets.length,
