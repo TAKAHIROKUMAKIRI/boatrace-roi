@@ -368,7 +368,7 @@ console.log(
     
     const skippedBets: Array<BetResult & { reason: string }> = [];
 
-    const evComparisons = [3, 4, 5, 6, 7, 8, 10].map((threshold) => {
+    const evComparisons = [5.0, 5.5, 6.0, 6.5, 7.0].map((threshold) => {
       const filtered = allBets.filter(
         (b) => b.ev >= threshold && b.odds >= minOdds && b.odds <= maxOdds
       );
