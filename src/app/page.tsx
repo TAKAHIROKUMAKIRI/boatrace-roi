@@ -280,18 +280,6 @@ allRaces.push(...compactRaces);
 
     const hitBets = bets.filter((b) => b.hit);
 
-console.log(
-  "HIT SAMPLE",
-  hitBets.slice(0, 20).map((b) => ({
-    race: b.race,
-    bet: b.bet,
-    result: b.result,
-    odds: b.odds,
-    ev: b.ev,
-    payout: b.payout,
-  }))
-);
-
     const missBets = bets.filter((b) => !b.hit);
 
 console.log(
@@ -301,29 +289,7 @@ console.log(
     result: b.result,
   }))
 );
-    
-    console.log(
-  "WINNER DIST",
-  hitBets.reduce((acc, b) => {
-    const winner = b.result.split("-")[0];
-
-    acc[winner] = (acc[winner] || 0) + 1;
-
-    return acc;
-  }, {} as Record<string, number>)
-);
-    
-console.log(
-  "ALL SAMPLE",
-  bets.slice(0, 20).map((b) => ({
-    race: b.race,
-    bet: b.bet,
-    odds: b.odds,
-    ev: b.ev,
-    probability: b.probability,
-  }))
-);
-    
+            
     console.log(
   "AVG BETS PER RACE",
   bets.length,
@@ -381,15 +347,6 @@ console.log(
 
       const comparisonBets = Object.values(groups).flatMap((raceBets) =>
   raceBets.sort((a, b) => b.ev - a.ev).slice(0, 2)
-);
-
-      console.log(
-  "ODDS SAMPLE",
-  comparisonBets.slice(0, 20).map((b) => ({
-    odds: b.odds,
-    ev: b.ev,
-    probability: b.probability,
-  }))
 );
       
       const investment = comparisonBets.length * stake;
