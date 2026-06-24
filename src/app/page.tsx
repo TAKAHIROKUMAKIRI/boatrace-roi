@@ -322,7 +322,7 @@ allRaces.push(...compactRaces);
     
     const skippedBets: Array<BetResult & { reason: string }> = [];
 
-    const evComparisons = [1.05, 1.3, 1.5, 2.0, 3.0, 5.0].map((threshold) => {
+    const evComparisons = [3, 4, 5, 6, 7, 8, 10].map((threshold) => {
       const filtered = allBets.filter(
         (b) => b.ev >= threshold && b.odds >= minOdds && b.odds <= maxOdds
       );
