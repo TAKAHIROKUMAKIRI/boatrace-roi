@@ -62,21 +62,6 @@ const scores = racers.map((r) => ({
   firstScore: racerScore(r) * firstLaneBonus[r.lane],
   secondScore: racerScore(r) * secondLaneBonus[r.lane],
 }));
-
-  console.log(
-  "SCORE SAMPLE",
-  scores.map((s) => ({
-    lane: s.lane,
-    baseScore: s.baseScore,
-    firstScore: s.firstScore,
-    secondScore: s.secondScore,
-    winRate: s.winRate,
-    localWinRate: s.localWinRate,
-    motorRate: s.motorRate,
-    boatRate: s.boatRate,
-    averageStart: s.averageStart,
-  }))
-);
   
   const combinations: Prediction[] = [];
 
