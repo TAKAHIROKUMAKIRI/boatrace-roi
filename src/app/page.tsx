@@ -91,7 +91,9 @@ allRaces.push(...cached);continue;}
 
 console.log("FETCH", date);
 
-const res = await fetch(/api/boatrace?mode=backtest&startDate=${date}&endDate=${date});
+const res = await fetch(
+  `/api/boatrace?mode=backtest&startDate=${date}&endDate=${date}`
+);
 
     if (!res.ok) {
       throw new Error(`API error ${res.status}`);
