@@ -46,7 +46,8 @@ const [races, setRaces] = useState<Race[]>([]);const [isLoading, setIsLoading] =
 
 const stake = 1000;
 
-const yen = (value: number | null | undefined) =>¥${(value ?? 0).toLocaleString()};
+const yen = (value: number | null | undefined) =>
+  "¥" + (value ?? 0).toLocaleString();
 
 useEffect(() => {if (!startDate || !endDate) return;
 
