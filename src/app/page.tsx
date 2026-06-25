@@ -54,8 +54,7 @@ const [races, setRaces] = useState<Race[]>([]);const [isLoading, setIsLoading] =
 
 const stake = 1000;
 
-const yen = (value: number | null | undefined) =>
-  `¥${(value ?? 0).toLocaleString()}`;
+const yen = (value: number | null | undefined) =>¥${(value ?? 0).toLocaleString()};
 
 useEffect(() => {if (!startDate || !endDate) return;
 
@@ -91,9 +90,7 @@ allRaces.push(...cached);continue;}
 
 console.log("FETCH", date);
 
-const res = await fetch(
-  `/api/boatrace?mode=backtest&startDate=${date}&endDate=${date}`
-);
+const res = await fetch(/api/boatrace?mode=backtest&startDate=${date}&endDate=${date});
 
     if (!res.ok) {
       throw new Error(`API error ${res.status}`);
