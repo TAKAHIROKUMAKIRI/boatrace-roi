@@ -262,7 +262,16 @@ return {
 
 }, [races, evThreshold, minOdds, maxOdds]);
 
-return (<mainstyle={{minHeight: "100vh",background: "#f5f7fb",padding: "32px",color: "#111827",fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',}}><div style={{ maxWidth: "1200px", margin: "0 auto" }}><h1 style={{ fontSize: "32px", marginBottom: "8px" }}>競艇2連単 ROIバックテスト</h1><p style={{ color: "#6b7280", marginBottom: "24px" }}>選手・モーター・ボート情報から2連単確率を計算し、EV条件に合う買い目だけを検証します。</p>
+return (
+  <main
+    style={{
+      minHeight: "100vh",
+      background: "#f5f7fb",
+      padding: "32px",
+      color: "#111827",
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    }}
+  >
 
     <section
       style={{
