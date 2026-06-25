@@ -350,11 +350,11 @@ console.log(
         return acc;
       }, {});
 
-      const comparisonBets = Object.values(groups).flatMap((raceBets) =>
+      const comparisonBetsRaw = Object.values(groups).flatMap((raceBets) =>
   raceBets.sort((a, b) => b.ev - a.ev).slice(0, 1)
 );
 
-      const comparisonBets = comparisonBetsRaw.filter((b) => {
+const comparisonBets = comparisonBetsRaw.filter((b) => {
   return !(b.odds <= 8 && b.ev < 6);
 });
       
