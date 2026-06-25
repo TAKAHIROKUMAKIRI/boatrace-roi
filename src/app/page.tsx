@@ -278,6 +278,11 @@ allRaces.push(...compactRaces);
   raceBets.sort((a, b) => b.ev - a.ev).slice(0, 1)
 );
 
+    const bets = betsRaw.filter((b) => {
+  // 人気サイドを除外
+  return !(b.odds <= 8 && b.ev < 6);
+});
+    
     const hitBets = bets.filter((b) => b.hit);
 
     const missBets = bets.filter((b) => !b.hit);
@@ -348,6 +353,10 @@ console.log(
       const comparisonBets = Object.values(groups).flatMap((raceBets) =>
   raceBets.sort((a, b) => b.ev - a.ev).slice(0, 1)
 );
+
+      const comparisonBets = comparisonBetsRaw.filter((b) => {
+  return !(b.odds <= 8 && b.ev < 6);
+});
       
       const investment = comparisonBets.length * stake;
       const payout = comparisonBets.reduce(
