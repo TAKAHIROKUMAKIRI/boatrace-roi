@@ -275,7 +275,7 @@ allRaces.push(...compactRaces);
 );
     
     const bets = Object.values(raceGroups).flatMap((raceBets) =>
-  raceBets.sort((a, b) => b.ev - a.ev).slice(0, 2)
+  raceBets.sort((a, b) => b.ev - a.ev).slice(0, 1)
 );
 
     const hitBets = bets.filter((b) => b.hit);
@@ -346,7 +346,7 @@ console.log(
       }, {});
 
       const comparisonBets = Object.values(groups).flatMap((raceBets) =>
-  raceBets.sort((a, b) => b.ev - a.ev).slice(0, 2)
+  raceBets.sort((a, b) => b.ev - a.ev).slice(0, 1)
 );
       
       const investment = comparisonBets.length * stake;
