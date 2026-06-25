@@ -274,12 +274,11 @@ allRaces.push(...compactRaces);
     }))
 );
     
-    const bets = Object.values(raceGroups).flatMap((raceBets) =>
+    const betsRaw = Object.values(raceGroups).flatMap((raceBets) =>
   raceBets.sort((a, b) => b.ev - a.ev).slice(0, 1)
 );
 
-    const bets = betsRaw.filter((b) => {
-  // 人気サイドを除外
+const bets = betsRaw.filter((b) => {
   return !(b.odds <= 8 && b.ev < 6);
 });
     
