@@ -281,6 +281,29 @@ allRaces.push(...compactRaces);
 const bets = betsRaw.filter((b) => {
   return !(b.odds <= 8 && b.ev < 6);
 });
+
+    const oddsStats = {
+  "4-10": { bet: 0, hit: 0 },
+  "10-20": { bet: 0, hit: 0 },
+  "20-30": { bet: 0, hit: 0 },
+  "30-50": { bet: 0, hit: 0 },
+  "50+": { bet: 0, hit: 0 },
+};
+
+for (const b of bets) {
+  let key = "50+";
+
+  if (b.odds < 10) key = "4-10";
+  else if (b.odds < 20) key = "10-20";
+  else if (b.odds < 30) key = "20-30";
+  else if (b.odds < 50) key = "30-50";
+
+  oddsStats[key].bet++;
+
+  if (b.hit) oddsStats[key].hit++;
+}
+
+console.table(oddsStats);
     
     const hitBets = bets.filter((b) => b.hit);
 
