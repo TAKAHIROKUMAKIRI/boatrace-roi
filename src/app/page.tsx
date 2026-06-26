@@ -365,6 +365,48 @@ export default function Home() {
       };
     });
 
+    const oddsBands = [
+  { name: "4-10", min: 4, max: 10 },
+  { name: "10-20", min: 10, max: 20 },
+  { name: "20-30", min: 20, max: 30 },
+  { name: "30-50", min: 30, max: 50 },
+  { name: "50+", min: 50, max: Infinity },
+];
+
+const heatmap = [
+  { label: "5.0-5.5", min: 5.0, max: 5.5 },
+  { label: "5.5-6.0", min: 5.5, max: 6.0 },
+  { label: "6.0-6.5", min: 6.0, max: 6.5 },
+  { label: "6.5-7.0", min: 6.5, max: 7.0 },
+  { label: "7.0+", min: 7.0, max: Infinity },
+].map((evBand) => {
+  return {
+    ...evBand,
+    odds: oddsBands.map((oddsBand) => {
+      const list = bets.filter(
+        (b) =>
+          b.ev >= evBand.min &&
+          b.ev < evBand.max &&
+          b.odds >= oddsBand.min &&
+          b.odds < oddsBand.max
+      );
+
+      const payout = list.reduce(
+        (sum, b) => sum + (b.hit ? b.payout : 0),
+        0
+      );
+
+      return {
+        label: oddsBand.name,
+        count: list.length,
+        roi: list.length ? (payout / (list.length * stake)) * 100 : 0,
+      };
+    }),
+  };
+});
+
+    console.log("HEATMAP", heatmap);
+    
     return {
       totalCandidates: allBets.length,
       bets,
