@@ -383,13 +383,13 @@ const heatmap = [
   return {
     ...evBand,
     odds: oddsBands.map((oddsBand) => {
-      const list = bets.filter(
-        (b) =>
-          b.ev >= evBand.min &&
-          b.ev < evBand.max &&
-          b.odds >= oddsBand.min &&
-          b.odds < oddsBand.max
-      );
+      const list = allBets.filter(
+  (b) =>
+    b.ev >= evBand.min &&
+    b.ev < evBand.max &&
+    b.odds >= oddsBand.min &&
+    b.odds < oddsBand.max
+);
 
       const payout = list.reduce(
         (sum, b) => sum + (b.hit ? b.payout : 0),
