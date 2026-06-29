@@ -276,6 +276,21 @@ export default function Home() {
       return emptyResult;
     }
 
+      let printed = false;
+
+  for (const race of races) {
+
+      if (!printed) {
+      console.log("RACE SAMPLE", race);
+      printed = true;
+    }
+
+    if (!race.racers || race.racers.length !== 6 || !race.odds) {
+      continue;
+    }
+
+    const predictions = predictExacta(race.racers);
+    
     for (const race of races) {
       if (!race.racers || race.racers.length !== 6 || !race.odds) {
         continue;
