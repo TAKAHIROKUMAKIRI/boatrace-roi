@@ -297,8 +297,6 @@ export default function Home() {
 
 const ev = adjustedProbability * odds;
         
-        const ev = prediction.probability * odds;
-
         allBets.push({
           race: race.race,
           bet: prediction.bet,
