@@ -425,18 +425,19 @@ const heatmap = [
     console.log("HEATMAP", heatmap);
     
     return {
-      totalCandidates: allBets.length,
-      bets,
-      skippedBets,
-      evComparisons,
-      evBandComparisons,
-      investment: mainSummary.investment,
-      payout: mainSummary.payout,
-      profit: mainSummary.profit,
-      roi: mainSummary.roi,
-      hitCount: mainSummary.hitCount,
-      hitRate: mainSummary.hitRate,
-    };
+  totalCandidates: allBets.length,
+  bets,
+  skippedBets,
+  evComparisons,
+  evBandComparisons,
+  investment: mainSummary.investment,
+  payout: mainSummary.payout,
+  profit: mainSummary.profit,
+  roi: mainSummary.roi,
+  hitCount: mainSummary.hitCount,
+  hitRate: mainSummary.hitRate,
+  heatmap,
+};
   }, [races, evThreshold, minOdds, maxOdds]);
 
   return (
