@@ -289,11 +289,15 @@ export default function Home() {
 
         const adjustedProbability =
   prediction.probability *
-  (odds >= 50 ? 0.35 :
-   odds >= 40 ? 0.45 :
-   odds >= 30 ? 0.55 :
-   odds >= 20 ? 0.70 :
-   1);
+  (odds >= 50
+    ? 0.75
+    : odds >= 40
+      ? 0.85
+      : odds >= 30
+        ? 0.9
+        : odds >= 20
+          ? 0.95
+          : 1);
 
 const ev = adjustedProbability * odds;
         
