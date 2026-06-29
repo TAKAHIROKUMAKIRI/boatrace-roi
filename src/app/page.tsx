@@ -287,19 +287,7 @@ export default function Home() {
         const odds = race.odds[prediction.bet];
         if (!odds) continue;
 
-        const adjustedProbability =
-  prediction.probability *
-  (odds >= 50
-    ? 0.75
-    : odds >= 40
-      ? 0.85
-      : odds >= 30
-        ? 0.9
-        : odds >= 20
-          ? 0.95
-          : 1);
-
-const ev = prediction.probability * odds;
+        const ev = prediction.probability * odds;
 
 allBets.push({
   race: race.race,
