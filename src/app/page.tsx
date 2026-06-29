@@ -299,18 +299,18 @@ export default function Home() {
           ? 0.95
           : 1);
 
-const ev = adjustedProbability * odds;
-        
-        allBets.push({
-          race: race.race,
-          bet: prediction.bet,
-          probability: adjustedProbability,
-          odds,
-          ev,
-          payout: race.payout,
-          result: race.result,
-          hit: prediction.bet === race.result,
-        });
+const ev = prediction.probability * odds;
+
+allBets.push({
+  race: race.race,
+  bet: prediction.bet,
+  probability: prediction.probability,
+  odds,
+  ev,
+  payout: race.payout,
+  result: race.result,
+  hit: prediction.bet === race.result,
+});
       }
     }
 
