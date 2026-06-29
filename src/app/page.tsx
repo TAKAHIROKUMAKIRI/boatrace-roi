@@ -400,7 +400,9 @@ const heatmap = [
     b.ev >= evBand.min &&
     b.ev < evBand.max &&
     b.odds >= oddsBand.min &&
-    b.odds < oddsBand.max
+    b.odds < oddsBand.max &&
+    b.odds >= minOdds &&
+    b.odds <= maxOdds
 );
 
       const payout = list.reduce(
