@@ -430,7 +430,6 @@ const heatmap = [
       skippedBets,
       evComparisons,
       evBandComparisons,
-      heatmap,
       investment: mainSummary.investment,
       payout: mainSummary.payout,
       profit: mainSummary.profit,
