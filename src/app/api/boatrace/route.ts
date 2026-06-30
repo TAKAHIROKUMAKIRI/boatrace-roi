@@ -200,6 +200,18 @@ async function getSingleRace(date: string, jcd: string, rno: string) {
 
   const venueName = VENUE_NAMES[jcd] ?? jcd;
 
+  const seriesNameMatch = raceListPage.text.match(
+  /HOME\s+メインメニュー\s+本日のレース\s+(.+?)\s+出走表/
+);
+
+const seriesName = seriesNameMatch ? seriesNameMatch[1].trim() : "";
+
+const raceLabelMatch = raceListPage.text.match(
+  /締切予定時刻\s+\d{1,2}:\d{2}\s+(.+?)\s+1800m/
+);
+
+const raceLabel = raceLabelMatch ? raceLabelMatch[1].trim() : "";
+  
   const isErrorPage =
     beforeInfo.text.includes("見つかりませんでした") ||
     resultPage.text.includes("見つかりませんでした") ||
@@ -213,6 +225,9 @@ async function getSingleRace(date: string, jcd: string, rno: string) {
   venueName,
   raceNo: Number(rno),
   race: `${venueName} ${rno}R`,
+
+  seriesName,
+  raceLabel,
 
   result: result.result,
   payout: result.payout,
