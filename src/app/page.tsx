@@ -15,6 +15,8 @@ type Race = {
   payout: number;
   odds: Record<string, number>;
   racers: Racer[];
+  seriesName?: string;
+  raceLabel?: string;
 };
 
 type BetResult = {
@@ -27,6 +29,8 @@ type BetResult = {
   result?: string | null;
   hit: boolean;
   reason?: string;
+  raceCategory?: string;
+  seriesName?: string;
 };
 
 type EvComparison = {
@@ -51,12 +55,24 @@ type EvBandComparison = {
   roi: number;
 };
 
+type CategoryComparison = {
+  category: string;
+  betCount: number;
+  hitCount: number;
+  hitRate: number;
+  investment: number;
+  payout: number;
+  profit: number;
+  roi: number;
+};
+
 type BacktestResult = {
   totalCandidates: number;
   bets: BetResult[];
   skippedBets: Array<BetResult & { reason: string }>;
   evComparisons: EvComparison[];
   evBandComparisons: EvBandComparison[];
+  categoryComparisons: CategoryComparison[];
   investment: number;
   payout: number;
   profit: number;
@@ -71,6 +87,7 @@ const emptyResult: BacktestResult = {
   skippedBets: [],
   evComparisons: [],
   evBandComparisons: [],
+  categoryComparisons: [],
   investment: 0,
   payout: 0,
   profit: 0,
@@ -165,6 +182,26 @@ function summarizeBets(bets: BetResult[], stake: number) {
   };
 }
 
+function getRaceCategory(seriesName?: string) {
+  const name = seriesName ?? "";
+
+  if (name.includes("SG")) return "SG";
+  if (name.includes("PG1")) return "PG1";
+  if (name.includes("G1")) return "G1";
+  if (name.includes("G2")) return "G2";
+  if (name.includes("G3")) return "G3";
+
+  if (name.includes("ヴィーナス") || name.includes("レディース")) {
+    return "女子戦";
+  }
+
+  if (name.includes("ルーキー") || name.includes("ヤング")) {
+    return "若手戦";
+  }
+
+  return "一般戦";
+}
+
 export default function Home() {
   const [evThreshold, setEvThreshold] = useState(1.15);
   const [minOdds, setMinOdds] = useState(4);
@@ -215,7 +252,8 @@ export default function Home() {
         const allRaces: Race[] = [];
 
         for (const date of dates) {
-          const cached = await readRaceCache(date);
+          const cacheDateKey = date + "-series-v1";
+          const cached = await readRaceCache(cacheDateKey);
 
           if (cached) {
             console.log("CACHE HIT", date);
@@ -252,9 +290,11 @@ export default function Home() {
             payout: r.payout,
             odds: r.odds,
             racers: r.racers,
+            seriesName: r.seriesName,
+            raceLabel: r.raceLabel,
           }));
 
-          await saveRaceCache(date, compactRaces);
+          await saveRaceCache(cacheDateKey, compactRaces);
           allRaces.push(...compactRaces);
         }
 
@@ -307,6 +347,8 @@ export default function Home() {
           payout: race.payout,
           result: race.result,
           hit: prediction.bet === race.result,
+          raceCategory: getRaceCategory(race.seriesName),
+          seriesName: race.seriesName,
         });
       }
     }
@@ -373,12 +415,37 @@ export default function Home() {
       };
     });
 
+    const categoryGroups = bets.reduce<Record<string, BetResult[]>>((acc, bet) => {
+      const key = bet.raceCategory ?? "不明";
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(bet);
+      return acc;
+    }, {});
+
+    const categoryComparisons = Object.entries(categoryGroups).map(
+      ([category, categoryBets]) => {
+        const summary = summarizeBets(categoryBets, stake);
+
+        return {
+          category,
+          betCount: categoryBets.length,
+          hitCount: summary.hitCount,
+          hitRate: summary.hitRate,
+          investment: summary.investment,
+          payout: summary.payout,
+          profit: summary.profit,
+          roi: summary.roi,
+        };
+      }
+    );
+
     return {
       totalCandidates: allBets.length,
       bets,
       skippedBets,
       evComparisons,
       evBandComparisons,
+      categoryComparisons,
       investment: mainSummary.investment,
       payout: mainSummary.payout,
       profit: mainSummary.profit,
@@ -564,6 +631,42 @@ export default function Home() {
               {result.evBandComparisons.map((row) => (
                 <tr key={row.label}>
                   <Td>{row.label}</Td>
+                  <Td>{row.betCount}</Td>
+                  <Td>{row.hitCount}</Td>
+                  <Td>{row.hitRate.toFixed(1)}%</Td>
+                  <Td>{yen(row.investment)}</Td>
+                  <Td>{yen(row.payout)}</Td>
+                  <Td>
+                    {row.profit >= 0 ? "+" : ""}
+                    {yen(row.profit)}
+                  </Td>
+                  <Td>{row.roi.toFixed(1)}%</Td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <h2 style={{ fontSize: "20px", marginTop: "32px", marginBottom: "16px" }}>
+            シリーズ種別別ROI
+          </h2>
+
+          <table style={tableStyle}>
+            <thead>
+              <tr style={{ background: "#f9fafb" }}>
+                <Th>種別</Th>
+                <Th>購入点数</Th>
+                <Th>的中数</Th>
+                <Th>的中率</Th>
+                <Th>投資額</Th>
+                <Th>払戻額</Th>
+                <Th>収支</Th>
+                <Th>ROI</Th>
+              </tr>
+            </thead>
+            <tbody>
+              {result.categoryComparisons.map((row) => (
+                <tr key={row.category}>
+                  <Td>{row.category}</Td>
                   <Td>{row.betCount}</Td>
                   <Td>{row.hitCount}</Td>
                   <Td>{row.hitRate.toFixed(1)}%</Td>
