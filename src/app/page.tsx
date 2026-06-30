@@ -374,6 +374,18 @@ export default function Home() {
 
     const betsRaw = selectTopBetsByRace(filteredBets, 1);
     const bets = applyPopularSideFilter(betsRaw);
+
+    console.table(
+  bets.map((b) => ({
+    race: b.race,
+    venue: b.venueName,
+    series: b.seriesName,
+    category: b.raceCategory,
+    odds: b.odds,
+    ev: b.ev.toFixed(2),
+  }))
+);
+    
     const mainSummary = summarizeBets(bets, stake);
 
     const skippedBets: Array<BetResult & { reason: string }> = [];
