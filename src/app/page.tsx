@@ -239,6 +239,8 @@ export default function Home() {
           const data = await res.json();
           const racesForDate = Array.isArray(data.races) ? data.races : [];
 
+          console.log("API RACE RAW", racesForDate[0]);
+          
           const compactRaces: Race[] = racesForDate.map((r: Race) => ({
             raceId: r.raceId,
             date: r.date,
