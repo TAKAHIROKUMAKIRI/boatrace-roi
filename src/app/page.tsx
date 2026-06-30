@@ -385,6 +385,8 @@ export default function Home() {
     ev: b.ev.toFixed(2),
   }))
 );
+
+    console.table([...new Set(bets.map((b) => b.seriesName))]);
     
     const mainSummary = summarizeBets(bets, stake);
 
