@@ -29,6 +29,7 @@ type BetResult = {
   result?: string | null;
   hit: boolean;
   reason?: string;
+  venueName?: string;
   raceCategory?: string;
   seriesName?: string;
 };
@@ -66,6 +67,17 @@ type CategoryComparison = {
   roi: number;
 };
 
+type VenueComparison = {
+  venueName: string;
+  betCount: number;
+  hitCount: number;
+  hitRate: number;
+  investment: number;
+  payout: number;
+  profit: number;
+  roi: number;
+};
+
 type BacktestResult = {
   totalCandidates: number;
   bets: BetResult[];
@@ -73,6 +85,7 @@ type BacktestResult = {
   evComparisons: EvComparison[];
   evBandComparisons: EvBandComparison[];
   categoryComparisons: CategoryComparison[];
+  venueComparisons: VenueComparison[];
   investment: number;
   payout: number;
   profit: number;
@@ -88,6 +101,7 @@ const emptyResult: BacktestResult = {
   evComparisons: [],
   evBandComparisons: [],
   categoryComparisons: [],
+  venueComparisons: [],
   investment: 0,
   payout: 0,
   profit: 0,
@@ -347,6 +361,7 @@ export default function Home() {
           payout: race.payout,
           result: race.result,
           hit: prediction.bet === race.result,
+          venueName: race.venueName,
           raceCategory: getRaceCategory(race.seriesName),
           seriesName: race.seriesName,
         });
@@ -439,6 +454,30 @@ export default function Home() {
       }
     );
 
+    const venueGroups = bets.reduce<Record<string, BetResult[]>>((acc, bet) => {
+      const key = bet.venueName ?? "不明";
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(bet);
+      return acc;
+    }, {});
+
+    const venueComparisons = Object.entries(venueGroups)
+      .map(([venueName, venueBets]) => {
+        const summary = summarizeBets(venueBets, stake);
+
+        return {
+          venueName,
+          betCount: venueBets.length,
+          hitCount: summary.hitCount,
+          hitRate: summary.hitRate,
+          investment: summary.investment,
+          payout: summary.payout,
+          profit: summary.profit,
+          roi: summary.roi,
+        };
+      })
+      .sort((a, b) => b.roi - a.roi);
+
     return {
       totalCandidates: allBets.length,
       bets,
@@ -446,6 +485,7 @@ export default function Home() {
       evComparisons,
       evBandComparisons,
       categoryComparisons,
+      venueComparisons,
       investment: mainSummary.investment,
       payout: mainSummary.payout,
       profit: mainSummary.profit,
@@ -667,6 +707,42 @@ export default function Home() {
               {result.categoryComparisons.map((row) => (
                 <tr key={row.category}>
                   <Td>{row.category}</Td>
+                  <Td>{row.betCount}</Td>
+                  <Td>{row.hitCount}</Td>
+                  <Td>{row.hitRate.toFixed(1)}%</Td>
+                  <Td>{yen(row.investment)}</Td>
+                  <Td>{yen(row.payout)}</Td>
+                  <Td>
+                    {row.profit >= 0 ? "+" : ""}
+                    {yen(row.profit)}
+                  </Td>
+                  <Td>{row.roi.toFixed(1)}%</Td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <h2 style={{ fontSize: "20px", marginTop: "32px", marginBottom: "16px" }}>
+            開催場別ROI
+          </h2>
+
+          <table style={tableStyle}>
+            <thead>
+              <tr style={{ background: "#f9fafb" }}>
+                <Th>開催場</Th>
+                <Th>購入点数</Th>
+                <Th>的中数</Th>
+                <Th>的中率</Th>
+                <Th>投資額</Th>
+                <Th>払戻額</Th>
+                <Th>収支</Th>
+                <Th>ROI</Th>
+              </tr>
+            </thead>
+            <tbody>
+              {result.venueComparisons.map((row) => (
+                <tr key={row.venueName}>
+                  <Td>{row.venueName}</Td>
                   <Td>{row.betCount}</Td>
                   <Td>{row.hitCount}</Td>
                   <Td>{row.hitRate.toFixed(1)}%</Td>
