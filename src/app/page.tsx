@@ -276,22 +276,14 @@ export default function Home() {
       return emptyResult;
     }
 
-      let printed = false;
+    let printed = false;
 
-  for (const race of races) {
-
-      if (!printed) {
-      console.log("RACE SAMPLE", race);
-      printed = true;
-    }
-
-    if (!race.racers || race.racers.length !== 6 || !race.odds) {
-      continue;
-    }
-
-    const predictions = predictExacta(race.racers);
-    
     for (const race of races) {
+      if (!printed) {
+        console.log("RACE SAMPLE", race);
+        printed = true;
+      }
+
       if (!race.racers || race.racers.length !== 6 || !race.odds) {
         continue;
       }
@@ -304,16 +296,16 @@ export default function Home() {
 
         const ev = prediction.probability * odds;
 
-allBets.push({
-  race: race.race,
-  bet: prediction.bet,
-  probability: prediction.probability,
-  odds,
-  ev,
-  payout: race.payout,
-  result: race.result,
-  hit: prediction.bet === race.result,
-});
+        allBets.push({
+          race: race.race,
+          bet: prediction.bet,
+          probability: prediction.probability,
+          odds,
+          ev,
+          payout: race.payout,
+          result: race.result,
+          hit: prediction.bet === race.result,
+        });
       }
     }
 
@@ -323,7 +315,6 @@ allBets.push({
 
     const betsRaw = selectTopBetsByRace(filteredBets, 1);
     const bets = applyPopularSideFilter(betsRaw);
-
     const mainSummary = summarizeBets(bets, stake);
 
     const skippedBets: Array<BetResult & { reason: string }> = [];
@@ -379,8 +370,8 @@ allBets.push({
         roi: summary.roi,
       };
     });
-    
-        return {
+
+    return {
       totalCandidates: allBets.length,
       bets,
       skippedBets,
